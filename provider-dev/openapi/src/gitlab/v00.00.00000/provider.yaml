@@ -1,0 +1,35 @@
+id: gitlab
+name: gitlab
+version: v00.00.00000
+providerServices:
+  issues:
+    id: issues:v00.00.00000
+    name: issues
+    preferred: true
+    service:
+      $ref: gitlab/v00.00.00000/services/issues.yaml
+    title: issues API
+    version: v00.00.00000
+    description: GitLab GraphQL API - issues (read-only)
+  projects:
+    id: projects:v00.00.00000
+    name: projects
+    preferred: true
+    service:
+      $ref: gitlab/v00.00.00000/services/projects.yaml
+    title: projects API
+    version: v00.00.00000
+    description: GitLab GraphQL API - projects (read-only)
+  users:
+    id: users:v00.00.00000
+    name: users
+    preferred: true
+    service:
+      $ref: gitlab/v00.00.00000/services/users.yaml
+    title: users API
+    version: v00.00.00000
+    description: GitLab GraphQL API - users (read-only)
+config:
+  auth:
+    credentialsenvvar: GITLAB_TOKEN
+    type: bearer

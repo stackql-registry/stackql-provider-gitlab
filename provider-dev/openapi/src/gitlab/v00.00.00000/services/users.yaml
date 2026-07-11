@@ -1,0 +1,187 @@
+openapi: 3.0.3
+info:
+  title: users API
+  description: GitLab GraphQL API - users (read-only)
+  version: v00.00.00000
+servers:
+  - url: https://{host}
+    variables:
+      host:
+        default: gitlab.com
+paths:
+  /api/graphql?resource=current_user&method=get:
+    post:
+      operationId: current_user_get
+      summary: Get information about current user.
+      x-stackQL-graphQL:
+        id: gitlab.users.current_user.get
+        url: https://gitlab.com/api/graphql
+        httpVerb: POST
+        responseSelection:
+          jsonPath: $.data.*
+        cursor:
+          jsonPath: $.stackql_gql_get_sentinel
+        query: query { currentUser { active admin avatarUrl bio bot commitEmail compositeIdentityEnforced createdAt discord duoClassicChatAvailable github gitpodEnabled groupCount human id jobTitle lastActivityOn linkedin location name organization preferencesGitpodPath profileEnableGitpodPath projectCount pronouns publicEmail state twitter type username webPath webUrl namespace { id fullPath name } } }
+      parameters: []
+      responses:
+        '200':
+          description: GraphQL response envelope
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      currentUser:
+                        type: object
+                        properties:
+                          active:
+                            type: boolean
+                            description: Indicates if the user is active.
+                          admin:
+                            type: boolean
+                            description: Indicates if the user is an instance administrator.
+                          avatarUrl:
+                            type: string
+                            description: URL of the user's avatar.
+                          bio:
+                            type: string
+                            description: Bio of the user.
+                          bot:
+                            type: boolean
+                            description: Indicates if the user is a bot.
+                          commitEmail:
+                            type: string
+                            description: User's default commit email.
+                          compositeIdentityEnforced:
+                            type: boolean
+                            description: Indicates if composite identity is enforced for the user.
+                          createdAt:
+                            type: string
+                            description: Timestamp of when the user was created.
+                          discord:
+                            type: string
+                            description: Discord ID of the user.
+                          duoClassicChatAvailable:
+                            type: boolean
+                            description: User access to GitLab Duo Chat (non-agentic) feature.
+                          github:
+                            type: string
+                            description: GitHub profile name of the user.
+                          gitpodEnabled:
+                            type: boolean
+                            description: Whether Ona is enabled at the user level.
+                          groupCount:
+                            type: integer
+                            description: Group count for the user.
+                          human:
+                            type: boolean
+                            description: Indicates if the user is a regular user.
+                          id:
+                            type: string
+                            description: Global ID of the user.
+                          jobTitle:
+                            type: string
+                            description: Job title of the user.
+                          lastActivityOn:
+                            type: string
+                            description: Date the user last performed any actions.
+                          linkedin:
+                            type: string
+                            description: LinkedIn profile name of the user.
+                          location:
+                            type: string
+                            description: Location of the user.
+                          name:
+                            type: string
+                            description: Human-readable name of the user. Returns `****` if the user is a project bot and the requester does not have permission to view the project.
+                          organization:
+                            type: string
+                            description: Who the user represents or works for.
+                          preferencesGitpodPath:
+                            type: string
+                            description: Web path to the Ona section within user preferences.
+                          profileEnableGitpodPath:
+                            type: string
+                            description: Web path to enable Ona for the user.
+                          projectCount:
+                            type: integer
+                            description: Project count for the user.
+                          pronouns:
+                            type: string
+                            description: Pronouns of the user.
+                          publicEmail:
+                            type: string
+                            description: User's public email.
+                          state:
+                            type: string
+                            enum:
+                              - active
+                              - blocked
+                              - deactivated
+                              - banned
+                              - ldap_blocked
+                              - blocked_pending_approval
+                            description: State of the user.
+                          twitter:
+                            type: string
+                            description: X (formerly Twitter) username of the user.
+                          type:
+                            type: string
+                            enum:
+                              - HUMAN
+                              - SUPPORT_BOT
+                              - ALERT_BOT
+                              - VISUAL_REVIEW_BOT
+                              - SERVICE_USER
+                              - GHOST
+                              - PROJECT_BOT
+                              - SECURITY_BOT
+                              - AUTOMATION_BOT
+                              - SECURITY_POLICY_BOT
+                              - ADMIN_BOT
+                              - SERVICE_ACCOUNT
+                              - PLACEHOLDER
+                              - DUO_CODE_REVIEW_BOT
+                              - IMPORT_USER
+                            description: Type of the user.
+                          username:
+                            type: string
+                            description: Username of the user. Unique within the instance of GitLab.
+                          webPath:
+                            type: string
+                            description: Web path of the user.
+                          webUrl:
+                            type: string
+                            description: Web URL of the user.
+                          namespace:
+                            type: object
+                            properties:
+                              id:
+                                type: string
+                              fullPath:
+                                type: string
+                              name:
+                                type: string
+components:
+  x-stackQL-resources:
+    current_user:
+      id: gitlab.users.current_user
+      name: current_user
+      title: Current User
+      methods:
+        get:
+          operation:
+            $ref: '#/paths/~1api~1graphql?resource=current_user&method=get/post'
+          response:
+            mediaType: application/json
+            openAPIDocKey: '200'
+            objectKey: $.data.currentUser
+      sqlVerbs:
+        select:
+          - $ref: '#/components/x-stackQL-resources/current_user/methods/get'
+        insert: []
+        update: []
+        delete: []

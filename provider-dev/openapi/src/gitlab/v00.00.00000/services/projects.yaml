@@ -1,0 +1,430 @@
+openapi: 3.0.3
+info:
+  title: projects API
+  description: GitLab GraphQL API - projects (read-only)
+  version: v00.00.00000
+servers:
+  - url: https://{host}
+    variables:
+      host:
+        default: gitlab.com
+paths:
+  /api/graphql?resource=projects&method=list:
+    post:
+      operationId: projects_list
+      summary: Find projects visible to the current user.
+      x-stackQL-graphQL:
+        id: gitlab.projects.projects.list
+        url: https://gitlab.com/api/graphql
+        httpVerb: POST
+        responseSelection:
+          jsonPath: $.data.projects.nodes[*]
+        cursor:
+          strategy: page_info
+          jsonPath: $.data.projects.pageInfo.endCursor
+          terminateOnJsonPath: $.data.projects.pageInfo.hasNextPage
+        query: 'query { projects(first: 100{{ .cursor }}{{ if .active }}, active: {{ .active }}{{ end }}{{ if .aimed_for_deletion }}, aimedForDeletion: {{ .aimed_for_deletion }}{{ end }}{{ if .archived }}, archived: {{ .archived }}{{ end }}{{ if .include_hidden }}, includeHidden: {{ .include_hidden }}{{ end }}{{ if .last_repository_check_failed }}, lastRepositoryCheckFailed: {{ .last_repository_check_failed }}{{ end }}{{ if .marked_for_deletion_on }}, markedForDeletionOn: "{{ .marked_for_deletion_on }}"{{ end }}{{ if .membership }}, membership: {{ .membership }}{{ end }}{{ if .min_access_level }}, minAccessLevel: {{ .min_access_level }}{{ end }}{{ if .namespace_path }}, namespacePath: "{{ .namespace_path }}"{{ end }}{{ if .not_aimed_for_deletion }}, notAimedForDeletion: {{ .not_aimed_for_deletion }}{{ end }}{{ if .personal }}, personal: {{ .personal }}{{ end }}{{ if .programming_language_name }}, programmingLanguageName: "{{ .programming_language_name }}"{{ end }}{{ if .search }}, search: "{{ .search }}"{{ end }}{{ if .search_namespaces }}, searchNamespaces: {{ .search_namespaces }}{{ end }}{{ if .sort }}, sort: "{{ .sort }}"{{ end }}{{ if .visibility_level }}, visibilityLevel: {{ .visibility_level }}{{ end }}{{ if .with_issues_enabled }}, withIssuesEnabled: {{ .with_issues_enabled }}{{ end }}{{ if .with_merge_requests_enabled }}, withMergeRequestsEnabled: {{ .with_merge_requests_enabled }}{{ end }}) { nodes { actualRepositorySizeLimit adminEditPath adminShowPath allowMergeOnSkippedPipeline allowsMultipleMergeRequestAssignees allowsMultipleMergeRequestReviewers archived autocloseReferencedIssues avatarUrl ciConfigPathOrDefault containerRegistryEnabled containerRepositoriesCount containerScanningForRegistryEnabled createdAt description descriptionHtml editPath forksCount fullPath hasJiraVulnerabilityIssueCreationEnabled httpUrlToRepo id importStatus isForked issuesEnabled jiraImportStatus jobsEnabled lastActivityAt lfsEnabled mergeCommitTemplate mergeRequestTitleRegex mergeRequestTitleRegexDescription mergeRequestsDisableCommittersApproval mergeRequestsEnabled mergeRequestsFfOnlyEnabled name nameWithNamespace onlyAllowMergeIfAllDiscussionsAreResolved onlyAllowMergeIfAllStatusChecksPassed onlyAllowMergeIfPipelineSucceeds openIssuesCount openMergeRequestsCount pagesForceHttps pagesUseUniqueDomain path preReceiveSecretDetectionEnabled preventMergeWithoutJiraIssueEnabled printingMergeRequestLinkEnabled publicJobs removeSourceBranchAfterMerge repositorySizeExcess requestAccessEnabled secretPushProtectionEnabled securityConfigurationPath securityDashboardPath serviceDeskAddress serviceDeskEnabled sharedRunnersEnabled snippetsEnabled squashCommitTemplate squashReadOnly sshUrlToRepo starCount suggestionCommitMessage topics updatedAt visibility webPath webUrl wikiEnabled namespace { id fullPath name } group { id fullPath name } } pageInfo { hasNextPage endCursor } } }'
+      parameters:
+        - name: active
+          in: query
+          required: false
+          description: Filters by projects that are not archived and not marked for deletion.
+          schema:
+            type: boolean
+        - name: aimed_for_deletion
+          in: query
+          required: false
+          description: Return only projects marked for deletion.
+          schema:
+            type: boolean
+        - name: archived
+          in: query
+          required: false
+          description: Filter projects by archived status.
+          schema:
+            type: string
+            enum:
+              - ONLY
+              - INCLUDE
+              - EXCLUDE
+        - name: include_hidden
+          in: query
+          required: false
+          description: Include hidden projects.
+          schema:
+            type: boolean
+        - name: last_repository_check_failed
+          in: query
+          required: false
+          description: Return only projects where the last repository check failed. Only available for administrators.
+          schema:
+            type: boolean
+        - name: marked_for_deletion_on
+          in: query
+          required: false
+          description: Date when the project was marked for deletion.
+          schema:
+            type: string
+        - name: membership
+          in: query
+          required: false
+          description: Return only projects that the current user is a member of.
+          schema:
+            type: boolean
+        - name: min_access_level
+          in: query
+          required: false
+          description: Return only projects where current user has at least the specified access level.
+          schema:
+            type: string
+            enum:
+              - NO_ACCESS
+              - MINIMAL_ACCESS
+              - GUEST
+              - PLANNER
+              - REPORTER
+              - SECURITY_MANAGER
+              - DEVELOPER
+              - MAINTAINER
+              - OWNER
+              - ADMIN
+        - name: namespace_path
+          in: query
+          required: false
+          description: Filter projects by their namespace's full path (group or user).
+          schema:
+            type: string
+        - name: not_aimed_for_deletion
+          in: query
+          required: false
+          description: Exclude projects that are marked for deletion.
+          schema:
+            type: boolean
+        - name: personal
+          in: query
+          required: false
+          description: Return only personal projects.
+          schema:
+            type: boolean
+        - name: programming_language_name
+          in: query
+          required: false
+          description: 'Filter projects by programming language name (case insensitive). For example: `css` or `ruby`.'
+          schema:
+            type: string
+        - name: search
+          in: query
+          required: false
+          description: Search query, which can be for the project name, a path, or a description.
+          schema:
+            type: string
+        - name: search_namespaces
+          in: query
+          required: false
+          description: Include namespace in project search.
+          schema:
+            type: boolean
+        - name: sort
+          in: query
+          required: false
+          description: 'Sort order of results. Format: `<field_name>_<sort_direction>`, for example: `id_desc` or `name_asc`. Defaults to `id_desc`, or `similarity` if search used.'
+          schema:
+            type: string
+        - name: visibility_level
+          in: query
+          required: false
+          description: Filter projects by visibility level.
+          schema:
+            type: string
+            enum:
+              - private
+              - internal
+              - public
+        - name: with_issues_enabled
+          in: query
+          required: false
+          description: Return only projects with issues enabled.
+          schema:
+            type: boolean
+        - name: with_merge_requests_enabled
+          in: query
+          required: false
+          description: Return only projects with merge requests enabled.
+          schema:
+            type: boolean
+      responses:
+        '200':
+          description: GraphQL response envelope
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      projects:
+                        type: object
+                        properties:
+                          nodes:
+                            type: array
+                            items:
+                              type: object
+                              properties:
+                                actualRepositorySizeLimit:
+                                  type: number
+                                  description: Size limit for the repository in bytes.
+                                adminEditPath:
+                                  type: string
+                                  description: Admin path for editing project. Only available to admins.
+                                adminShowPath:
+                                  type: string
+                                  description: Admin path of the project. Only available to admins.
+                                allowMergeOnSkippedPipeline:
+                                  type: boolean
+                                  description: If `only_allow_merge_if_pipeline_succeeds` is true, indicates if merge requests of the project can also be merged with skipped jobs.
+                                allowsMultipleMergeRequestAssignees:
+                                  type: boolean
+                                  description: Project allows assigning multiple users to a merge request.
+                                allowsMultipleMergeRequestReviewers:
+                                  type: boolean
+                                  description: Project allows assigning multiple reviewers to a merge request.
+                                archived:
+                                  type: boolean
+                                  description: Indicates if the project or any ancestor is archived.
+                                autocloseReferencedIssues:
+                                  type: boolean
+                                  description: Indicates if issues referenced by merge requests and commits within the default branch are closed automatically.
+                                avatarUrl:
+                                  type: string
+                                  description: Avatar URL of the project.
+                                ciConfigPathOrDefault:
+                                  type: string
+                                  description: Path of the CI configuration file.
+                                containerRegistryEnabled:
+                                  type: boolean
+                                  description: Indicates if Container registry is enabled for the current user
+                                containerRepositoriesCount:
+                                  type: integer
+                                  description: Number of container repositories in the project.
+                                containerScanningForRegistryEnabled:
+                                  type: boolean
+                                  description: Indicates whether container scanning for registry is enabled or not for the project. Returns `null` if unauthorized.
+                                createdAt:
+                                  type: string
+                                  description: Timestamp of the project creation.
+                                description:
+                                  type: string
+                                  description: Short description of the project.
+                                descriptionHtml:
+                                  type: string
+                                  description: GitLab Flavored Markdown rendering of `description`
+                                editPath:
+                                  type: string
+                                  description: Path for editing project.
+                                forksCount:
+                                  type: integer
+                                  description: Number of times the project has been forked.
+                                fullPath:
+                                  type: string
+                                  description: Full path of the project.
+                                hasJiraVulnerabilityIssueCreationEnabled:
+                                  type: boolean
+                                  description: Indicates whether Jira issue creation from vulnerabilities is enabled.
+                                httpUrlToRepo:
+                                  type: string
+                                  description: URL to connect to the project via HTTPS.
+                                id:
+                                  type: string
+                                  description: ID of the project.
+                                importStatus:
+                                  type: string
+                                  description: Status of import background job of the project.
+                                isForked:
+                                  type: boolean
+                                  description: Project is forked.
+                                issuesEnabled:
+                                  type: boolean
+                                  description: Indicates if Issues are enabled for the current user
+                                jiraImportStatus:
+                                  type: string
+                                  description: Status of Jira import background job of the project.
+                                jobsEnabled:
+                                  type: boolean
+                                  description: Indicates if CI/CD pipeline jobs are enabled for the current user.
+                                lastActivityAt:
+                                  type: string
+                                  description: Timestamp of the project last activity.
+                                lfsEnabled:
+                                  type: boolean
+                                  description: Indicates if the project has Large File Storage (LFS) enabled.
+                                mergeCommitTemplate:
+                                  type: string
+                                  description: Template used to create merge commit message in merge requests.
+                                mergeRequestTitleRegex:
+                                  type: string
+                                  description: Regex used to validate the title of merge requests.
+                                mergeRequestTitleRegexDescription:
+                                  type: string
+                                  description: Description of the regex used to validate the title of merge requests.
+                                mergeRequestsDisableCommittersApproval:
+                                  type: boolean
+                                  description: Indicates that committers of the given merge request cannot approve.
+                                mergeRequestsEnabled:
+                                  type: boolean
+                                  description: Indicates if Merge requests are enabled for the current user
+                                mergeRequestsFfOnlyEnabled:
+                                  type: boolean
+                                  description: Indicates if no merge commits should be created and all merges should instead be fast-forwarded, which means that merging is only allowed if the branch could be fast-forwarded.
+                                name:
+                                  type: string
+                                  description: Name of the project without the namespace.
+                                nameWithNamespace:
+                                  type: string
+                                  description: Name of the project including the namespace.
+                                onlyAllowMergeIfAllDiscussionsAreResolved:
+                                  type: boolean
+                                  description: Indicates if merge requests of the project can only be merged when all the discussions are resolved.
+                                onlyAllowMergeIfAllStatusChecksPassed:
+                                  type: boolean
+                                  description: Indicates that merges of merge requests should be blocked unless all status checks have passed.
+                                onlyAllowMergeIfPipelineSucceeds:
+                                  type: boolean
+                                  description: Indicates if merge requests of the project can only be merged with successful jobs.
+                                openIssuesCount:
+                                  type: integer
+                                  description: Number of open issues for the project.
+                                openMergeRequestsCount:
+                                  type: integer
+                                  description: Number of open merge requests for the project.
+                                pagesForceHttps:
+                                  type: boolean
+                                  description: Project's Pages site redirects unsecured connections to HTTPS.
+                                pagesUseUniqueDomain:
+                                  type: boolean
+                                  description: Project's Pages site uses a unique subdomain.
+                                path:
+                                  type: string
+                                  description: Path of the project.
+                                preReceiveSecretDetectionEnabled:
+                                  type: boolean
+                                  description: Indicates whether secret push protection is on or not for the project.
+                                preventMergeWithoutJiraIssueEnabled:
+                                  type: boolean
+                                  description: Indicates if an associated issue from Jira is required.
+                                printingMergeRequestLinkEnabled:
+                                  type: boolean
+                                  description: Indicates if a link to create or view a merge request should display after a push to Git repositories of the project from the command line.
+                                publicJobs:
+                                  type: boolean
+                                  description: Indicates if there is public access to pipelines and job details of the project, including output logs and artifacts.
+                                removeSourceBranchAfterMerge:
+                                  type: boolean
+                                  description: Indicates if `Delete source branch` option should be enabled by default for all new merge requests of the project.
+                                repositorySizeExcess:
+                                  type: number
+                                  description: Size of repository that exceeds the limit in bytes.
+                                requestAccessEnabled:
+                                  type: boolean
+                                  description: Indicates if users can request member access to the project.
+                                secretPushProtectionEnabled:
+                                  type: boolean
+                                  description: Indicates whether secret push protection is on or not for the project.
+                                securityConfigurationPath:
+                                  type: string
+                                  description: Path to project's security configuration.
+                                securityDashboardPath:
+                                  type: string
+                                  description: Path to project's security dashboard.
+                                serviceDeskAddress:
+                                  type: string
+                                  description: E-mail address of the Service Desk.
+                                serviceDeskEnabled:
+                                  type: boolean
+                                  description: Indicates if the project has Service Desk enabled.
+                                sharedRunnersEnabled:
+                                  type: boolean
+                                  description: Indicates if shared runners are enabled for the project.
+                                snippetsEnabled:
+                                  type: boolean
+                                  description: Indicates if Snippets are enabled for the current user
+                                squashCommitTemplate:
+                                  type: string
+                                  description: Template used to create squash commit message in merge requests.
+                                squashReadOnly:
+                                  type: boolean
+                                  description: Indicates if `squashReadOnly` is enabled.
+                                sshUrlToRepo:
+                                  type: string
+                                  description: URL to connect to the project via SSH.
+                                starCount:
+                                  type: integer
+                                  description: Number of times the project has been starred.
+                                suggestionCommitMessage:
+                                  type: string
+                                  description: Commit message used to apply merge request suggestions.
+                                topics:
+                                  type: array
+                                  items:
+                                    type: string
+                                    description: List of project topics.
+                                updatedAt:
+                                  type: string
+                                  description: Timestamp of when the project was last updated.
+                                visibility:
+                                  type: string
+                                  description: Visibility of the project.
+                                webPath:
+                                  type: string
+                                  description: Web path of the project.
+                                webUrl:
+                                  type: string
+                                  description: Web URL of the project.
+                                wikiEnabled:
+                                  type: boolean
+                                  description: Indicates if Wikis are enabled for the current user
+                                namespace:
+                                  type: object
+                                  properties:
+                                    id:
+                                      type: string
+                                    fullPath:
+                                      type: string
+                                    name:
+                                      type: string
+                                group:
+                                  type: object
+                                  properties:
+                                    id:
+                                      type: string
+                                    fullPath:
+                                      type: string
+                                    name:
+                                      type: string
+                          pageInfo:
+                            type: object
+                            properties:
+                              hasNextPage:
+                                type: boolean
+                              endCursor:
+                                type: string
+components:
+  x-stackQL-resources:
+    projects:
+      id: gitlab.projects.projects
+      name: projects
+      title: Projects
+      methods:
+        list:
+          operation:
+            $ref: '#/paths/~1api~1graphql?resource=projects&method=list/post'
+          response:
+            mediaType: application/json
+            openAPIDocKey: '200'
+            objectKey: $.data.projects.nodes[*]
+      sqlVerbs:
+        select:
+          - $ref: '#/components/x-stackQL-resources/projects/methods/list'
+        insert: []
+        update: []
+        delete: []

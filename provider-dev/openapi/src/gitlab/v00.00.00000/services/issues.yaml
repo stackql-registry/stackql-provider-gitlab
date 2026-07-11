@@ -1,0 +1,512 @@
+openapi: 3.0.3
+info:
+  title: issues API
+  description: GitLab GraphQL API - issues (read-only)
+  version: v00.00.00000
+servers:
+  - url: https://{host}
+    variables:
+      host:
+        default: gitlab.com
+paths:
+  /api/graphql?resource=project_issues&method=list:
+    post:
+      operationId: project_issues_list
+      summary: Issues of the project.
+      x-stackQL-graphQL:
+        id: gitlab.issues.project_issues.list
+        url: https://gitlab.com/api/graphql
+        httpVerb: POST
+        responseSelection:
+          jsonPath: $.data.project.issues.nodes[*]
+        cursor:
+          strategy: page_info
+          jsonPath: $.data.project.issues.pageInfo.endCursor
+          terminateOnJsonPath: $.data.project.issues.pageInfo.hasNextPage
+        query: 'query { project(fullPath: "{{ .full_path }}") { issues(first: 100{{ .cursor }}{{ if .assignee_id }}, assigneeId: "{{ .assignee_id }}"{{ end }}{{ if .assignee_wildcard_id }}, assigneeWildcardId: {{ .assignee_wildcard_id }}{{ end }}{{ if .author_username }}, authorUsername: "{{ .author_username }}"{{ end }}{{ if .closed_after }}, closedAfter: "{{ .closed_after }}"{{ end }}{{ if .closed_before }}, closedBefore: "{{ .closed_before }}"{{ end }}{{ if .confidential }}, confidential: {{ .confidential }}{{ end }}{{ if .created_after }}, createdAfter: "{{ .created_after }}"{{ end }}{{ if .created_before }}, createdBefore: "{{ .created_before }}"{{ end }}{{ if .crm_contact_id }}, crmContactId: "{{ .crm_contact_id }}"{{ end }}{{ if .crm_organization_id }}, crmOrganizationId: "{{ .crm_organization_id }}"{{ end }}{{ if .due_after }}, dueAfter: "{{ .due_after }}"{{ end }}{{ if .due_before }}, dueBefore: "{{ .due_before }}"{{ end }}{{ if .epic_id }}, epicId: "{{ .epic_id }}"{{ end }}{{ if .epic_wildcard_id }}, epicWildcardId: {{ .epic_wildcard_id }}{{ end }}{{ if .health_status_filter }}, healthStatusFilter: {{ .health_status_filter }}{{ end }}{{ if .iid }}, iid: "{{ .iid }}"{{ end }}{{ if .include_subepics }}, includeSubepics: {{ .include_subepics }}{{ end }}{{ if .iteration_title }}, iterationTitle: "{{ .iteration_title }}"{{ end }}{{ if .iteration_wildcard_id }}, iterationWildcardId: {{ .iteration_wildcard_id }}{{ end }}{{ if .milestone_wildcard_id }}, milestoneWildcardId: {{ .milestone_wildcard_id }}{{ end }}{{ if .my_reaction_emoji }}, myReactionEmoji: "{{ .my_reaction_emoji }}"{{ end }}{{ if .release_tag_wildcard_id }}, releaseTagWildcardId: {{ .release_tag_wildcard_id }}{{ end }}{{ if .search }}, search: "{{ .search }}"{{ end }}{{ if .sort }}, sort: {{ .sort }}{{ end }}{{ if .state }}, state: {{ .state }}{{ end }}{{ if .subscribed }}, subscribed: {{ .subscribed }}{{ end }}{{ if .updated_after }}, updatedAfter: "{{ .updated_after }}"{{ end }}{{ if .updated_before }}, updatedBefore: "{{ .updated_before }}"{{ end }}{{ if .weight }}, weight: "{{ .weight }}"{{ end }}{{ if .weight_wildcard_id }}, weightWildcardId: {{ .weight_wildcard_id }}{{ end }}) { nodes { blocked blockedByCount blockingCount closedAt confidential createNoteEmail createdAt description descriptionHtml discussionLocked downvotes dueDate emailsEnabled escalationStatus externalAuthor hasEpic healthStatus hidden humanTimeEstimate humanTotalTimeSpent id iid mergeRequestsCount moved name projectId reference relativePosition severity slaDueAt state statusPagePublishedIncident subscribed timeEstimate title titleHtml totalTimeSpent type updatedAt upvotes userDiscussionsCount userNotesCount webPath webUrl weight author { id username name } milestone { id title } } pageInfo { hasNextPage endCursor } } } }'
+      parameters:
+        - name: full_path
+          in: query
+          required: true
+          description: The full path of the project, e.g. gitlab-org/gitlab
+          schema:
+            type: string
+        - name: assignee_id
+          in: query
+          required: false
+          description: ID of a user assigned to the issues. Wildcard values "NONE" and "ANY" are supported.
+          schema:
+            type: string
+        - name: assignee_wildcard_id
+          in: query
+          required: false
+          description: Filter by assignee wildcard. Incompatible with assigneeUsername and assigneeUsernames.
+          schema:
+            type: string
+            enum:
+              - NONE
+              - ANY
+              - ME
+        - name: author_username
+          in: query
+          required: false
+          description: Username of the author of the issue.
+          schema:
+            type: string
+        - name: closed_after
+          in: query
+          required: false
+          description: Issues closed after the date.
+          schema:
+            type: string
+        - name: closed_before
+          in: query
+          required: false
+          description: Issues closed before the date.
+          schema:
+            type: string
+        - name: confidential
+          in: query
+          required: false
+          description: Filter for confidential issues. If "false", excludes confidential issues. If "true", returns only confidential issues.
+          schema:
+            type: boolean
+        - name: created_after
+          in: query
+          required: false
+          description: Issues created after the date.
+          schema:
+            type: string
+        - name: created_before
+          in: query
+          required: false
+          description: Issues created before the date.
+          schema:
+            type: string
+        - name: crm_contact_id
+          in: query
+          required: false
+          description: ID of a contact assigned to the issues.
+          schema:
+            type: string
+        - name: crm_organization_id
+          in: query
+          required: false
+          description: ID of an organization assigned to the issues.
+          schema:
+            type: string
+        - name: due_after
+          in: query
+          required: false
+          description: Return issues due on or after the given time.
+          schema:
+            type: string
+        - name: due_before
+          in: query
+          required: false
+          description: Return issues due on or before the given time.
+          schema:
+            type: string
+        - name: epic_id
+          in: query
+          required: false
+          description: ID of an epic associated with the issues, "none" and "any" values are supported.
+          schema:
+            type: string
+        - name: epic_wildcard_id
+          in: query
+          required: false
+          description: Filter by epic ID wildcard. Incompatible with epicId.
+          schema:
+            type: string
+            enum:
+              - NONE
+              - ANY
+        - name: health_status_filter
+          in: query
+          required: false
+          description: Health status of the issue, "none" and "any" values are supported.
+          schema:
+            type: string
+            enum:
+              - NONE
+              - ANY
+              - onTrack
+              - needsAttention
+              - atRisk
+        - name: iid
+          in: query
+          required: false
+          description: IID of the issue. For example, "1".
+          schema:
+            type: string
+        - name: include_subepics
+          in: query
+          required: false
+          description: Whether to include subepics when filtering issues by epicId.
+          schema:
+            type: boolean
+        - name: iteration_title
+          in: query
+          required: false
+          description: Filter by iteration title.
+          schema:
+            type: string
+        - name: iteration_wildcard_id
+          in: query
+          required: false
+          description: Filter by iteration ID wildcard.
+          schema:
+            type: string
+            enum:
+              - NONE
+              - ANY
+              - CURRENT
+        - name: milestone_wildcard_id
+          in: query
+          required: false
+          description: Filter issues by milestone ID wildcard.
+          schema:
+            type: string
+            enum:
+              - NONE
+              - ANY
+              - STARTED
+              - UPCOMING
+        - name: my_reaction_emoji
+          in: query
+          required: false
+          description: Filter by reaction emoji applied by the current user. Wildcard values "NONE" and "ANY" are supported.
+          schema:
+            type: string
+        - name: release_tag_wildcard_id
+          in: query
+          required: false
+          description: Filter issues by release tag ID wildcard.
+          schema:
+            type: string
+            enum:
+              - NONE
+              - ANY
+        - name: search
+          in: query
+          required: false
+          description: Search query for title or description.
+          schema:
+            type: string
+        - name: sort
+          in: query
+          required: false
+          description: Sort issues by the criteria.
+          schema:
+            type: string
+            enum:
+              - DUE_DATE_ASC
+              - DUE_DATE_DESC
+              - RELATIVE_POSITION_ASC
+              - SEVERITY_ASC
+              - SEVERITY_DESC
+              - TITLE_ASC
+              - TITLE_DESC
+              - POPULARITY_ASC
+              - POPULARITY_DESC
+              - ESCALATION_STATUS_ASC
+              - ESCALATION_STATUS_DESC
+              - CLOSED_AT_ASC
+              - CLOSED_AT_DESC
+              - WEIGHT_ASC
+              - WEIGHT_DESC
+              - PUBLISHED_ASC
+              - PUBLISHED_DESC
+              - SLA_DUE_AT_ASC
+              - SLA_DUE_AT_DESC
+              - BLOCKING_ISSUES_ASC
+              - BLOCKING_ISSUES_DESC
+              - HEALTH_STATUS_ASC
+              - HEALTH_STATUS_DESC
+              - PRIORITY_ASC
+              - PRIORITY_DESC
+              - LABEL_PRIORITY_ASC
+              - LABEL_PRIORITY_DESC
+              - MILESTONE_DUE_ASC
+              - MILESTONE_DUE_DESC
+              - UPDATED_DESC
+              - UPDATED_ASC
+              - CREATED_DESC
+              - CREATED_ASC
+        - name: state
+          in: query
+          required: false
+          description: Current state of the issue.
+          schema:
+            type: string
+            enum:
+              - opened
+              - closed
+              - locked
+              - all
+        - name: subscribed
+          in: query
+          required: false
+          description: Issues the current user is subscribed to.
+          schema:
+            type: string
+            enum:
+              - EXPLICITLY_SUBSCRIBED
+              - EXPLICITLY_UNSUBSCRIBED
+        - name: updated_after
+          in: query
+          required: false
+          description: Issues updated after the date.
+          schema:
+            type: string
+        - name: updated_before
+          in: query
+          required: false
+          description: Issues updated before the date.
+          schema:
+            type: string
+        - name: weight
+          in: query
+          required: false
+          description: Weight applied to the issue, "none" and "any" values are supported.
+          schema:
+            type: string
+        - name: weight_wildcard_id
+          in: query
+          required: false
+          description: Filter by weight ID wildcard. Incompatible with weight.
+          schema:
+            type: string
+            enum:
+              - NONE
+              - ANY
+      responses:
+        '200':
+          description: GraphQL response envelope
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      project:
+                        type: object
+                        properties:
+                          issues:
+                            type: object
+                            properties:
+                              nodes:
+                                type: array
+                                items:
+                                  type: object
+                                  properties:
+                                    blocked:
+                                      type: boolean
+                                      description: Indicates the issue is blocked.
+                                    blockedByCount:
+                                      type: integer
+                                      description: Count of issues blocking the issue.
+                                    blockingCount:
+                                      type: integer
+                                      description: Count of issues the issue is blocking.
+                                    closedAt:
+                                      type: string
+                                      description: Timestamp of when the issue was closed.
+                                    confidential:
+                                      type: boolean
+                                      description: Indicates the issue is confidential.
+                                    createNoteEmail:
+                                      type: string
+                                      description: User specific email address for the issue.
+                                    createdAt:
+                                      type: string
+                                      description: Timestamp of when the issue was created.
+                                    description:
+                                      type: string
+                                      description: Description of the issue.
+                                    descriptionHtml:
+                                      type: string
+                                      description: GitLab Flavored Markdown rendering of `description`
+                                    discussionLocked:
+                                      type: boolean
+                                      description: Indicates discussion is locked on the issue.
+                                    downvotes:
+                                      type: integer
+                                      description: Number of downvotes the issue has received.
+                                    dueDate:
+                                      type: string
+                                      description: Due date of the issue.
+                                    emailsEnabled:
+                                      type: boolean
+                                      description: 'Indicates if the parent project or group has email notifications disabled: `false` if email notifications are disabled.'
+                                    escalationStatus:
+                                      type: string
+                                      enum:
+                                        - TRIGGERED
+                                        - ACKNOWLEDGED
+                                        - RESOLVED
+                                        - IGNORED
+                                      description: Escalation status of the issue.
+                                    externalAuthor:
+                                      type: string
+                                      description: Email address of non-GitLab user reporting the issue. For guests, the email address is obfuscated.
+                                    hasEpic:
+                                      type: boolean
+                                      description: |-
+                                        Indicates if the issue belongs to an epic.
+                                                    Can return true and not show an associated epic when the user has no access to the epic.
+                                    healthStatus:
+                                      type: string
+                                      enum:
+                                        - onTrack
+                                        - needsAttention
+                                        - atRisk
+                                      description: Current health status.
+                                    hidden:
+                                      type: boolean
+                                      description: Indicates the issue is hidden because the author has been banned.
+                                    humanTimeEstimate:
+                                      type: string
+                                      description: Human-readable time estimate of the issue.
+                                    humanTotalTimeSpent:
+                                      type: string
+                                      description: Human-readable total time reported as spent on the issue.
+                                    id:
+                                      type: string
+                                      description: ID of the issue.
+                                    iid:
+                                      type: string
+                                      description: Internal ID of the issue.
+                                    mergeRequestsCount:
+                                      type: integer
+                                      description: Number of merge requests that close the issue on merge.
+                                    moved:
+                                      type: boolean
+                                      description: Indicates if issue got moved from other project.
+                                    name:
+                                      type: string
+                                      description: Name or title of the object.
+                                    projectId:
+                                      type: integer
+                                      description: ID of the issue project.
+                                    reference:
+                                      type: string
+                                      description: Internal reference of the issue. Returned in shortened format by default.
+                                    relativePosition:
+                                      type: integer
+                                      description: Relative position of the issue (used for positioning in epic tree and issue boards).
+                                    severity:
+                                      type: string
+                                      enum:
+                                        - UNKNOWN
+                                        - LOW
+                                        - MEDIUM
+                                        - HIGH
+                                        - CRITICAL
+                                      description: Severity level of the incident.
+                                    slaDueAt:
+                                      type: string
+                                      description: Timestamp of when the issue SLA expires.
+                                    state:
+                                      type: string
+                                      enum:
+                                        - opened
+                                        - closed
+                                        - locked
+                                        - all
+                                      description: State of the issue.
+                                    statusPagePublishedIncident:
+                                      type: boolean
+                                      description: Indicates whether an issue is published to the status page.
+                                    subscribed:
+                                      type: boolean
+                                      description: Indicates the currently logged in user is subscribed to the issue.
+                                    timeEstimate:
+                                      type: integer
+                                      description: Time estimate of the issue.
+                                    title:
+                                      type: string
+                                      description: Title of the issue.
+                                    titleHtml:
+                                      type: string
+                                      description: HTML rendering of `title`
+                                    totalTimeSpent:
+                                      type: integer
+                                      description: Total time (in seconds) reported as spent on the issue.
+                                    type:
+                                      type: string
+                                      enum:
+                                        - ISSUE
+                                        - INCIDENT
+                                        - TEST_CASE
+                                        - REQUIREMENT
+                                        - TASK
+                                        - TICKET
+                                      description: Type of the issue.
+                                    updatedAt:
+                                      type: string
+                                      description: Timestamp of when the issue was last updated.
+                                    upvotes:
+                                      type: integer
+                                      description: Number of upvotes the issue has received.
+                                    userDiscussionsCount:
+                                      type: integer
+                                      description: Number of user discussions in the issue.
+                                    userNotesCount:
+                                      type: integer
+                                      description: Number of user notes of the issue.
+                                    webPath:
+                                      type: string
+                                      description: Web path of the issue.
+                                    webUrl:
+                                      type: string
+                                      description: Web URL of the issue.
+                                    weight:
+                                      type: integer
+                                      description: Weight of the issue.
+                                    author:
+                                      type: object
+                                      properties:
+                                        id:
+                                          type: string
+                                        username:
+                                          type: string
+                                        name:
+                                          type: string
+                                    milestone:
+                                      type: object
+                                      properties:
+                                        id:
+                                          type: string
+                                        title:
+                                          type: string
+                              pageInfo:
+                                type: object
+                                properties:
+                                  hasNextPage:
+                                    type: boolean
+                                  endCursor:
+                                    type: string
+components:
+  x-stackQL-resources:
+    project_issues:
+      id: gitlab.issues.project_issues
+      name: project_issues
+      title: Project Issues
+      methods:
+        list:
+          operation:
+            $ref: '#/paths/~1api~1graphql?resource=project_issues&method=list/post'
+          response:
+            mediaType: application/json
+            openAPIDocKey: '200'
+            objectKey: $.data.project.issues.nodes[*]
+      sqlVerbs:
+        select:
+          - $ref: '#/components/x-stackQL-resources/project_issues/methods/list'
+        insert: []
+        update: []
+        delete: []
