@@ -1,3 +1,8 @@
+# StackQL binary and server logs
+/stackql
+/stackql.exe
+stackql-server.log
+
 # Logs
 logs
 *.log

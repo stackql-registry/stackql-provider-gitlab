@@ -1,0 +1,32 @@
+{
+  "name": "stackql-provider-gitlab",
+  "version": "0.1.0",
+  "description": "StackQL provider for GitLab (GraphQL, read-only)",
+  "type": "module",
+  "scripts": {
+    "fetch-schema": "bash ./bin/fetch-schema.sh",
+    "build-inventory": "node ./provider-dev/scripts/build_inventory.mjs",
+    "generate-provider": "node ./provider-dev/scripts/generate_provider.mjs",
+    "validate-complexity": "node ./provider-dev/scripts/validate_complexity.mjs",
+    "start-server": "bash ./bin/start-server.sh",
+    "stop-server": "bash ./bin/stop-server.sh",
+    "server-status": "bash ./bin/server-status.sh",
+    "test-meta-routes": "node ./bin/test-meta-routes.cjs",
+    "test-integration": "node ./tests/integration/run_integration_tests.mjs"
+  },
+  "dependencies": {
+    "@stackql/pgwire-lite": "^1.0.1",
+    "@stackql/provider-utils": "^0.7.6",
+    "graphql": "^17.0.2"
+  },
+  "keywords": [
+    "stackql",
+    "gitlab",
+    "provider",
+    "graphql"
+  ],
+  "license": "MIT",
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}
