@@ -43,6 +43,56 @@ npm run fetch-schema
 
 Downloads the introspection result into `provider-dev/downloaded/` and records the fetch date, content hash, and byte size in `provider-dev/config/schema_pin.json`. The script validates the download parses as a GraphQL introspection result before writing anything.
 
+## 2. Build the Resource Inventory
+
+```bash
+npm run build-inventory
+```
+
+Walks the `Query`, `Project`, and `Group` types of the pinned schema (via `provider-dev/scripts/lib/schema_walk.mjs`, the same code path the generator uses) and writes `provider-dev/config/resource_inventory.csv`: one row per candidate field with scope, node type, connection or singular shape, arguments, selectable field counts, proposed service/resource/method, an estimated complexity score, and a skip reason where a field is not mappable (union or interface node types, non-Relay lists, nodes with no scalar fields).
+
+Current inventory (schema pinned 2026-07-11): 409 candidate fields, 244 mapped (138 `list`, 106 `get`), 165 skipped. By scope: 51 instance, 123 project, 70 group.
+
+## 3. Generate the Provider
+
+```bash
+npm run generate-provider -- --only projects,project_issues,current_user
+```
+
+Emits one OpenAPI-shaped service doc per service into `provider-dev/openapi/src/gitlab/`, plus `provider.yaml`. Per method, from a single resolved field list: the GraphQL query text (single line, Go-template parameter and cursor splices), the `x-stackQL-graphQL` block (`page_info` cursor strategy for connections), typed OpenAPI parameters (enum values enumerated, optional filters conditionally included), and a `responses.200` schema mirroring the selection set. Queries are parsed with graphql-js before any file is written.
+
+`--only` restricts generation to named resources; full generation is gated until the pilot set is proven (phase 1 emits `projects.projects`, `issues.project_issues`, and `users.current_user`).
+
+Then validate every emitted query's complexity against the live gitlab.com limit:
+
+```bash
+npm run validate-complexity
+```
+
+Appends `queryComplexity { score limit }` to each generated query and fails the build if any score exceeds the limit (200 anonymous, 250 authenticated). Pilot scores: `projects.list` 181, `project_issues.list` 144, `current_user.get` 40.
+
+## 4. Test
+
+Four layers, adapted from the k8s provider:
+
+1. **Offline validation** - local file registry, `SHOW SERVICES/RESOURCES/METHODS` and `DESCRIBE` confirm the generated response schemas project columns.
+2. **Meta-route tests** - `npm run start-server`, `npm run test-meta-routes -- gitlab --verbose`, `npm run stop-server`.
+3. **Integration tests** - `npm run test-integration` runs the generated provider against a mock GitLab GraphQL server (`tests/integration/mock_gitlab_server.mjs`) and asserts row-level results: `nodes` unwrapping, `page_info` traversal across two pages including termination on `hasNextPage: false` with a non-empty final cursor, parameter templating (`full_path` splice, enum filters unquoted, string filters quoted, omitted optionals absent from the wire), single-object `.get` projection, bearer auth header, and GraphQL `errors` array surfacing as a query failure.
+4. **Smoke tests** - `python tests/smoke_test.py` (pystackql) runs read-only checks against live gitlab.com using the local provider; `--registry public` targets the published provider for post-publish verification. Set `GITLAB_TOKEN` for the `current_user` check; without it the suite runs anonymously against public data. On Windows run with `PYTHONUTF8=1`.
+
+## Server Parameter
+
+`host` is a server variable defaulting to `gitlab.com`; the generated server URL uses an inline-regex form (`https://{host:[^/]+}`) so that dotted hostnames resolve through the any-sdk query router. Self-managed instances are expected to route with `WHERE host = 'gitlab.example.com'` but are not yet validated, and older GitLab versions may lack fields present in the generated selection sets (GraphQL errors on unknown fields). v1 targets gitlab.com.
+
+## Known Limitations
+
+- Optional boolean filters with an explicit `false` value (and integer filters with `0`) are omitted from the rendered query - Go template truthiness cannot distinguish them from absent parameters.
+- List-valued and input-object filter arguments are not exposed in v1.
+- Any non-empty GraphQL `errors` array fails the whole query (engine policy), including partial errors alongside data.
+- Full result-chain traversal is bounded by `--http.response.pageLimit` (stackql default 20).
+
+See [NOTES.md](NOTES.md) for the evidence behind each of these.
+
 ## Repository Layout
 
 ```
