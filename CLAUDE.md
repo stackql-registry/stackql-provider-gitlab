@@ -76,9 +76,11 @@ Every step is deterministic and re-runnable. Manual decisions are applied as rul
 
 ### 2. Service split
 
-From the inventory, group resources into services and write `provider-dev/config/service_names.json`. Candidates (final decision from the inventory):
+From the inventory, group resources into services and write `provider-dev/config/service_names.json`. Final split (decided from the inventory, 2026-07-11):
 
-`projects` (projects, project members, labels, milestones, releases, environments), `groups` (groups, group members, epics if not split out), `users` (users, current_user), `issues`, `merge_requests`, `ci` (pipelines, jobs, runners, ci config), `work_items`, `security` (vulnerabilities, security reports), `packages` (packages, container repositories), `snippets`, `audit` (audit events), `metadata` (metadata, query_complexity)
+`projects` (projects, project members, labels, milestones, releases, environments), `groups` (groups, group members, epics, iterations), `users` (users, current_user, todos), `issues` (issues, timelogs), `merge_requests`, `ci` (pipelines, jobs, runners, ci config), `work_items`, `security` (vulnerabilities, security reports, dependencies), `packages` (packages, container repositories), `snippets`, `audit` (audit events), `boards`, `metadata` (metadata, query_complexity, echo), `analytics` (usage trends, devops adoption), `admin` (geo nodes, license history, subscription entries), `workspaces`, `ml` (model registry, experiments), `duo` (AI feature settings)
+
+Assignment is mechanical: the inventory's `proposed_service` unless overridden in `service_names.json`.
 
 ### 3. Generate the provider
 

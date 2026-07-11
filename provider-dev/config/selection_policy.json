@@ -1,0 +1,17 @@
+{
+  "description": "Selection-set policy applied uniformly by generate_provider.mjs. The query text and the responses.200 schema are generated from the same resolved field list. Never hand-tuned per resource.",
+  "rules": {
+    "scalarAndEnumFields": "select every field on the node type whose named type is a scalar or an enum, including lists of scalars/enums (projected as JSON arrays)",
+    "excludeFieldsWithRequiredArgs": "fields that declare one or more required arguments are not selectable bare and are excluded",
+    "nestedIdentity": "for each node-type field named in nestedIdentityAllowlist whose type is a single (non-list) object, select the intersection of the allowlisted subfields that exist on that object type as scalars/enums"
+  },
+  "nestedIdentityAllowlist": {
+    "author": ["id", "username", "name"],
+    "user": ["id", "username", "name"],
+    "namespace": ["id", "fullPath", "name"],
+    "group": ["id", "fullPath", "name"],
+    "project": ["id", "fullPath", "name"],
+    "milestone": ["id", "title"]
+  },
+  "pageSize": 100
+}

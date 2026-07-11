@@ -1,0 +1,37 @@
+{
+  "description": "Final service split for the gitlab provider. The generator assigns each mapped inventory row to a service: the 'overrides' map (keyed by proposed_resource) wins, otherwise the inventory's proposed_service is used. Services not in 'services' fail generation.",
+  "services": [
+    "projects",
+    "groups",
+    "users",
+    "issues",
+    "merge_requests",
+    "ci",
+    "work_items",
+    "security",
+    "packages",
+    "snippets",
+    "audit",
+    "boards",
+    "metadata",
+    "analytics",
+    "admin",
+    "workspaces",
+    "ml",
+    "duo"
+  ],
+  "overrides": {
+    "dependency": "security",
+    "usage_trends_measurements": "analytics",
+    "devops_adoption_enabled_namespaces": "analytics",
+    "geo_node": "admin",
+    "license_history_entries": "admin",
+    "subscription_future_entries": "admin",
+    "workspace": "workspaces",
+    "workspaces": "workspaces",
+    "ml_experiment": "ml",
+    "ai_chat_context_presets": "duo",
+    "iteration": "groups",
+    "timelogs": "issues"
+  }
+}
