@@ -42,7 +42,7 @@ cpSync(srcRegistry, tmpRoot, { recursive: true });
 const servicesDir = path.join(tmpRoot, 'src', 'gitlab', 'v00.00.00000', 'services');
 for (const f of readdirSync(servicesDir)) {
   const p = path.join(servicesDir, f);
-  writeFileSync(p, readFileSync(p, 'utf8').replace("url: https://{host}", "url: http://{host}"));
+  writeFileSync(p, readFileSync(p, 'utf8').replace('url: https://{host', 'url: http://{host'));
 }
 const regPath = tmpRoot.split(path.sep).join('/');
 const registry = JSON.stringify({

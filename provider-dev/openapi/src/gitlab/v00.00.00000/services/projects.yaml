@@ -4,7 +4,7 @@ info:
   description: GitLab GraphQL API - projects (read-only)
   version: v00.00.00000
 servers:
-  - url: https://{host}
+  - url: https://{host:[^/]+}
     variables:
       host:
         default: gitlab.com

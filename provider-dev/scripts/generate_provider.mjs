@@ -390,7 +390,12 @@ function buildServiceDoc(service, methods) {
     },
     servers: [
       {
-        url: 'https://{host}',
+        // The inline {host:[^/]+} regex is consumed by the any-sdk query
+        // router (gorilla/mux host template), where the default host
+        // variable regex does not span dots - without it, even the literal
+        // default gitlab.com fails route resolution. The armoury strips the
+        // regex before variable substitution, so wire URLs are unaffected.
+        url: 'https://{host:[^/]+}',
         variables: { host: { default: DEFAULT_HOST } },
       },
     ],
