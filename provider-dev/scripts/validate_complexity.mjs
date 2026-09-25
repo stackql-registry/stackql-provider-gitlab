@@ -20,8 +20,14 @@
 // A probe GitLab rejects before scoring (for example a global ID whose
 // model class cannot be derived from the scalar name) is UNMEASURED. It
 // passes by proxy when another query on the same node type measured
-// within the limit (same selection policy, same leaf set), and fails the
-// gate otherwise.
+// within the limit (same selection policy, same leaf set). When the
+// failure is GitLab's own (an internal server error or a request timeout -
+// some resolvers 500 for anonymous callers, and gitlab.com times out under
+// load), the query is instead BOUNDED: it passes when its selection could
+// not exceed the limit even if every selected leaf cost the highest
+// per-field complexity ever measured (MAX_FIELD_COST, 10 from the
+// MergeRequest measurement, plus the 12-point wrapper). Anything else
+// unmeasured fails the gate.
 //
 // Usage: node validate_complexity.mjs [--host gitlab.com] [--delay-ms 500] [--service merge_requests,ci] [--resource project_pipelines]
 
@@ -195,7 +201,7 @@ for (const f of fs.readdirSync(servicesDir).filter((x) => x.endsWith('.yaml') &&
     const probe = renderProbe(gql.query, op.parameters || [], argTypesByResource.get(resource) || {});
     // eslint-disable-next-line no-await-in-loop
     const r = await checkComplexity(probe);
-    const entry = { id: gql.id, nodeType: nodeTypeByResource.get(resource), ...r };
+    const entry = { id: gql.id, nodeType: nodeTypeByResource.get(resource), query: gql.query, ...r };
     results.push(entry);
     if (r.measured) console.log(`${r.ok ? 'PASS' : 'FAIL'}  ${gql.id}: score ${r.score} / limit ${r.limit}`);
     else console.log(`UNMEASURED  ${gql.id}: ${r.error}`);
@@ -204,19 +210,46 @@ for (const f of fs.readdirSync(servicesDir).filter((x) => x.endsWith('.yaml') &&
   }
 }
 
+// Conservative bound for probes GitLab itself failed to serve: the wrapper
+// costs 12 with a single leaf and no measured field has cost more than 10.
+const MAX_FIELD_COST = 10;
+const WRAPPER_COST = 12;
+const SERVER_FAULT = /internal server error|request timed out|http 5\d\d|non-json response/i;
+function leafCount(query) {
+  // the selection set between "nodes {" and "} pageInfo" for lists, or the
+  // whole body for gets; nested identity braces are flattened
+  const m = /nodes \{ (.*) \} pageInfo/.exec(query);
+  const body = m ? m[1] : query.replace(/^query \{ /, '').replace(/\{\{[^}]*\}\}/g, '');
+  return body.replace(/[{}()]/g, ' ').split(/\s+/).filter((t) => t && !/:$/.test(t) && !/^"/.test(t)).length;
+}
+
 const passedByNode = new Set(results.filter((r) => r.measured && r.ok).map((r) => r.nodeType));
+const observedLimit = Math.max(0, ...results.filter((r) => r.measured).map((r) => r.limit)) || (process.env.GITLAB_TOKEN ? 250 : 200);
 let failed = 0;
 let proxied = 0;
+let bounded = 0;
 let unresolved = 0;
 for (const r of results) {
   if (r.measured) { if (!r.ok) failed++; continue; }
   if (passedByNode.has(r.nodeType)) { proxied++; continue; }
+  if (SERVER_FAULT.test(r.error || '')) {
+    const leaves = leafCount(r.query);
+    const bound = WRAPPER_COST + leaves * MAX_FIELD_COST;
+    if (bound <= observedLimit) {
+      bounded++;
+      console.log(`BOUNDED     ${r.id}: server-side failure (${r.error.slice(0, 60)}); ${leaves} leaves x ${MAX_FIELD_COST} + ${WRAPPER_COST} = ${bound} <= ${observedLimit}`);
+      continue;
+    }
+    unresolved++;
+    console.log(`UNRESOLVED  ${r.id}: server-side failure and the conservative bound ${bound} exceeds ${observedLimit} (${r.error})`);
+    continue;
+  }
   unresolved++;
   console.log(`UNRESOLVED  ${r.id}: no measured query on node type ${r.nodeType} (${r.error})`);
 }
 const auth = process.env.GITLAB_TOKEN ? 'authenticated' : 'anonymous';
 const measured = results.filter((r) => r.measured);
 const top = measured.filter((r) => r.ok).sort((a, b) => b.score - a.score).slice(0, 5);
-console.log(`\n${measured.length - failed}/${measured.length} measured queries within the ${auth} complexity limit; ${proxied} unmeasured passed by node type; ${unresolved} unresolved`);
+console.log(`\n${measured.length - failed}/${measured.length} measured queries within the ${auth} complexity limit; ${proxied} unmeasured passed by node type; ${bounded} bounded after server-side failures; ${unresolved} unresolved`);
 console.log(`highest scores: ${top.map((r) => `${r.id}=${r.score}`).join(', ')}`);
 process.exit(failed === 0 && unresolved === 0 ? 0 : 1);

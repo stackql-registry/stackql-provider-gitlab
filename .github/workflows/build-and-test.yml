@@ -61,7 +61,13 @@ jobs:
             exit 1
           fi
 
-      - name: Complexity gate (anonymous limit, gitlab.com)
+      # Authenticated when the GITLAB_TOKEN secret is configured (limit 250,
+      # and the resolvers that answer anonymous callers with a 500 score
+      # normally); anonymous otherwise (forks, outside PRs), where the
+      # validator bounds server-side failures conservatively.
+      - name: Complexity gate (gitlab.com)
+        env:
+          GITLAB_TOKEN: ${{ secrets.GITLAB_TOKEN }}
         run: make validate-complexity
 
       - name: Offline validation
