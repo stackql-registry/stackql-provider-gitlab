@@ -1,0 +1,19 @@
+---
+title: gitlab
+hide_title: false
+hide_table_of_contents: false
+keywords:
+  - gitlab
+  - stackql
+  - infrastructure-as-code
+  - configuration-as-data
+  - cloud inventory
+description: Query GitLab projects, groups, users, issues, merge requests, pipelines, runners and vulnerabilities using SQL
+custom_edit_url: null
+image: /img/stackql-gitlab-provider-featured-image.png
+id: 'provider-intro'
+---
+
+import CopyableCode from '@site/src/components/CopyableCode/CopyableCode';
+
+A read-only SQL layer over the GitLab control plane, built on the GitLab GraphQL API: projects, groups, users, issues, merge requests, pipelines, jobs, runners, work items, vulnerabilities, releases, environments, packages and audit events, for inventory, reporting and cross-provider joins.

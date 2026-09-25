@@ -1,13 +1,18 @@
 // Mock GitLab GraphQL endpoint for integration tests.
 //
 // Serves POST /api/graphql and answers based on the query text, mirroring
-// GitLab wire shapes:
+// GitLab wire shapes. Response keys are the ALIASES the generated queries
+// request (snake_case), exactly as a GraphQL server echoes them:
 //   - projects list: two pages via Relay pageInfo; the final page carries a
 //     NON-empty endCursor with hasNextPage=false (Relay-strict), so
 //     termination must come from the hasNextPage flag, not cursor absence.
-//   - project issues list: asserts fullPath templating; echoes whether enum
-//     and string filters appeared in the query.
-//   - currentUser: single-object response for the .get archetype.
+//   - project issues list: asserts fullPath templating; echoes whether enum,
+//     string and boolean filters appeared in the query.
+//   - group projects list: a group-scoped connection whose nodes carry
+//     their own full_path column (the scope parameter / column overlap case).
+//   - currentUser and user: single-object responses for the instance .get
+//     archetypes (user echoes the username argument it received).
+//   - project pipeline: a project-scoped single-object .get.
 //   - a query containing 'trigger-error' in a search filter returns an
 //     HTTP 200 with a GraphQL errors array (partial-error surfacing test).
 //
@@ -15,33 +20,45 @@
 
 import http from 'node:http';
 
-const PROJECT_NODE = (i) => ({
+const PROJECT_NODE = (i, group = 'mock-group') => ({
   id: `gid://gitlab/Project/${i}`,
   name: `project-${i}`,
-  fullPath: `mock-group/project-${i}`,
+  full_path: `${group}/project-${i}`,
   archived: false,
-  starCount: i,
-  namespace: { id: 'gid://gitlab/Group/1', fullPath: 'mock-group', name: 'Mock Group' },
+  star_count: i,
+  namespace: { id: 'gid://gitlab/Group/1', full_path: group, name: 'Mock Group' },
 });
 
-const ISSUE_NODE = (i, state) => ({
+const ISSUE_NODE = (i, state, confidential = false) => ({
   id: `gid://gitlab/Issue/${i}`,
   iid: String(i),
   title: `issue-${i}`,
   state,
-  confidential: false,
+  confidential,
+  created_at: `2026-01-0${i}T00:00:00Z`,
   author: { id: 'gid://gitlab/User/1', username: 'mockuser', name: 'Mock User' },
   milestone: null,
 });
 
-const CURRENT_USER = {
+const USER = (username) => ({
   id: 'gid://gitlab/User/1',
-  username: 'mockuser',
+  username,
   name: 'Mock User',
   active: true,
   bot: false,
   state: 'active',
-  namespace: { id: 'gid://gitlab/Namespaces::UserNamespace/1', fullPath: 'mockuser', name: 'Mock User' },
+  namespace: { id: 'gid://gitlab/Namespaces::UserNamespace/1', full_path: username, name: 'Mock User' },
+});
+
+const PIPELINE = {
+  id: 'gid://gitlab/Ci::Pipeline/42',
+  iid: '42',
+  status: 'SUCCESS',
+  ref: 'main',
+  sha: 'abc123',
+  duration: 61,
+  created_at: '2026-01-01T00:00:00Z',
+  user: { id: 'gid://gitlab/User/1', username: 'mockuser', name: 'Mock User' },
 };
 
 export function startMockServer() {
@@ -68,7 +85,16 @@ export function startMockServer() {
           return;
         }
         if (/currentUser/.test(query)) {
-          reply({ data: { currentUser: CURRENT_USER } });
+          reply({ data: { currentUser: USER('mockuser') } });
+          return;
+        }
+        if (/^query \{ user/.test(query)) {
+          const m = query.match(/username: "([^"]*)"/);
+          reply({ data: { user: m ? USER(m[1]) : null } });
+          return;
+        }
+        if (/project\(fullPath:/.test(query) && /pipeline[({ ]/.test(query) && !/pipelines\(/.test(query)) {
+          reply({ data: { project: { pipeline: PIPELINE } } });
           return;
         }
         if (/project\(fullPath:/.test(query) && /issues\(/.test(query)) {
@@ -79,9 +105,10 @@ export function startMockServer() {
             return;
           }
           const stateFiltered = /state: opened/.test(query);
-          const nodes = stateFiltered
-            ? [ISSUE_NODE(1, 'opened')]
-            : [ISSUE_NODE(1, 'opened'), ISSUE_NODE(2, 'closed')];
+          const confidentialFalse = /confidential: false/.test(query);
+          let nodes = [ISSUE_NODE(1, 'opened'), ISSUE_NODE(2, 'closed'), ISSUE_NODE(3, 'opened', true)];
+          if (stateFiltered) nodes = nodes.filter((n) => n.state === 'opened');
+          if (confidentialFalse) nodes = nodes.filter((n) => !n.confidential);
           reply({
             data: {
               project: {
@@ -94,7 +121,22 @@ export function startMockServer() {
           });
           return;
         }
-        if (/projects\(/.test(query)) {
+        if (/group\(fullPath:/.test(query) && /projects\(/.test(query)) {
+          const m = query.match(/group\(fullPath: "([^"]*)"\)/);
+          const group = m ? m[1] : '';
+          reply({
+            data: {
+              group: {
+                projects: {
+                  nodes: [PROJECT_NODE(10, group), PROJECT_NODE(11, group)],
+                  pageInfo: { hasNextPage: false, endCursor: 'GP_CURSOR_END' },
+                },
+              },
+            },
+          });
+          return;
+        }
+        if (/^query \{ projects\(/.test(query)) {
           const isPage2 = /after: "PROJ_CURSOR_1"/.test(query);
           if (!isPage2) {
             reply({

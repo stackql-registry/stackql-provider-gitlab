@@ -1,0 +1,220 @@
+--- 
+title: project_dast_site_profile
+hide_title: false
+hide_table_of_contents: false
+keywords:
+  - project_dast_site_profile
+  - security
+  - gitlab
+  - infrastructure-as-code
+  - configuration-as-data
+  - cloud inventory
+description: Query, deploy and manage gitlab resources using SQL
+custom_edit_url: null
+image: /img/stackql-gitlab-provider-featured-image.png
+---
+
+import CopyableCode from '@site/src/components/CopyableCode/CopyableCode';
+import CodeBlock from '@theme/CodeBlock';
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+Gets or lists a <code>project_dast_site_profile</code> resource.
+
+## Overview
+<table><tbody>
+<tr><td><b>Name</b></td><td><CopyableCode code="project_dast_site_profile" /></td></tr>
+<tr><td><b>Type</b></td><td>Resource</td></tr>
+<tr><td><b>Id</b></td><td><CopyableCode code="gitlab.security.project_dast_site_profile" /></td></tr>
+</tbody></table>
+
+## Fields
+
+The following fields are returned by `SELECT` queries:
+
+<Tabs
+    defaultValue="get"
+    values={[
+        { label: 'get', value: 'get' }
+    ]}
+>
+<TabItem value="get">
+
+GraphQL response envelope
+
+<table>
+<thead>
+    <tr>
+    <th>Name</th>
+    <th>Datatype</th>
+    <th>Description</th>
+    </tr>
+</thead>
+<tbody>
+<tr>
+    <td><CopyableCode code="id" /></td>
+    <td><code>string</code></td>
+    <td>ID of the site profile.</td>
+</tr>
+<tr>
+    <td><CopyableCode code="profile_name" /></td>
+    <td><code>string</code></td>
+    <td>Name of the site profile.</td>
+</tr>
+<tr>
+    <td><CopyableCode code="edit_path" /></td>
+    <td><code>string</code></td>
+    <td>Relative web path to the edit page of a site profile.</td>
+</tr>
+<tr>
+    <td><CopyableCode code="excluded_urls" /></td>
+    <td><code>array</code></td>
+    <td></td>
+</tr>
+<tr>
+    <td><CopyableCode code="normalized_target_url" /></td>
+    <td><code>string</code></td>
+    <td>Normalized URL of the target to be scanned.</td>
+</tr>
+<tr>
+    <td><CopyableCode code="optional_variables" /></td>
+    <td><code>array</code></td>
+    <td></td>
+</tr>
+<tr>
+    <td><CopyableCode code="referenced_in_security_policies" /></td>
+    <td><code>array</code></td>
+    <td></td>
+</tr>
+<tr>
+    <td><CopyableCode code="request_headers" /></td>
+    <td><code>string</code></td>
+    <td>Comma-separated list of request header names and values to be added to every request made by DAST.</td>
+</tr>
+<tr>
+    <td><CopyableCode code="scan_file_path" /></td>
+    <td><code>string</code></td>
+    <td>Scan File Path used as input for the scanner.</td>
+</tr>
+<tr>
+    <td><CopyableCode code="scan_method" /></td>
+    <td><code>string</code></td>
+    <td>Scan method used by the scanner. (WEBSITE, OPENAPI, HAR, POSTMAN_COLLECTION, GRAPHQL)</td>
+</tr>
+<tr>
+    <td><CopyableCode code="target_type" /></td>
+    <td><code>string</code></td>
+    <td>Type of target to be scanned. (WEBSITE, API)</td>
+</tr>
+<tr>
+    <td><CopyableCode code="target_url" /></td>
+    <td><code>string</code></td>
+    <td>URL of the target to be scanned.</td>
+</tr>
+<tr>
+    <td><CopyableCode code="validation_started_at" /></td>
+    <td><code>string</code></td>
+    <td>Site profile validation start time.</td>
+</tr>
+<tr>
+    <td><CopyableCode code="validation_status" /></td>
+    <td><code>string</code></td>
+    <td>Current validation status of the site profile. (NONE, PENDING_VALIDATION, INPROGRESS_VALIDATION, PASSED_VALIDATION, FAILED_VALIDATION)</td>
+</tr>
+</tbody>
+</table>
+</TabItem>
+</Tabs>
+
+## Methods
+
+The following methods are available for this resource:
+
+<table>
+<thead>
+    <tr>
+    <th>Name</th>
+    <th>Accessible by</th>
+    <th>Required Params</th>
+    <th>Optional Params</th>
+    <th>Description</th>
+    </tr>
+</thead>
+<tbody>
+<tr>
+    <td><a href="#get"><CopyableCode code="get" /></a></td>
+    <td><CopyableCode code="select" /></td>
+    <td><a href="#parameter-full_path"><code>full_path</code></a>, <a href="#parameter-id"><code>id</code></a>, <a href="#parameter-host"><code>host</code></a></td>
+    <td></td>
+    <td>DAST Site Profile associated with the project. Generated from the GitLab GraphQL schema field Project.dastSiteProfile (DastSiteProfile).</td>
+</tr>
+</tbody>
+</table>
+
+## Parameters
+
+Parameters can be passed in the `WHERE` clause of a query. Check the [Methods](#methods) section to see which parameters are required or optional for each operation.
+
+<table>
+<thead>
+    <tr>
+    <th>Name</th>
+    <th>Datatype</th>
+    <th>Description</th>
+    </tr>
+</thead>
+<tbody>
+<tr id="parameter-full_path">
+    <td><CopyableCode code="full_path" /></td>
+    <td><code>string</code></td>
+    <td>Full path of the project, for example gitlab-org/gitlab</td>
+</tr>
+<tr id="parameter-host">
+    <td><CopyableCode code="host" /></td>
+    <td><code>string</code></td>
+    <td>GitLab host, with an optional port (default gitlab.com). Resolved from the GITLAB_HOST environment variable when it is set (x-stackQL-envVar); a WHERE host value always takes precedence. Self-managed instances: the provider is generated from the gitlab.com schema, so older instances may reject fields they do not serve. (default: gitlab.com, x-stackQL-envVar: GITLAB_HOST)</td>
+</tr>
+<tr id="parameter-id">
+    <td><CopyableCode code="id" /></td>
+    <td><code>string</code></td>
+    <td>ID of the site profile.</td>
+</tr>
+</tbody>
+</table>
+
+## `SELECT` examples
+
+<Tabs
+    defaultValue="get"
+    values={[
+        { label: 'get', value: 'get' }
+    ]}
+>
+<TabItem value="get">
+
+DAST Site Profile associated with the project. Generated from the GitLab GraphQL schema field Project.dastSiteProfile (DastSiteProfile).
+
+```sql
+SELECT
+id,
+profile_name,
+edit_path,
+excluded_urls,
+normalized_target_url,
+optional_variables,
+referenced_in_security_policies,
+request_headers,
+scan_file_path,
+scan_method,
+target_type,
+target_url,
+validation_started_at,
+validation_status
+FROM gitlab.security.project_dast_site_profile
+WHERE full_path = '{{ full_path }}' -- required
+AND id = '{{ id }}' -- required
+AND host = '{{ host }}' -- required (defaults to gitlab.com; or set GITLAB_HOST)
+;
+```
+</TabItem>
+</Tabs>

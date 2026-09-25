@@ -30,7 +30,7 @@ function csvEscape(v) {
   return s;
 }
 const header = [
-  'scope', 'source_field', 'node_type', 'kind', 'args',
+  'scope', 'host_type', 'source_field', 'node_type', 'kind', 'args',
   'scalar_enum_field_count', 'nested_allowlist',
   'proposed_service', 'proposed_resource', 'proposed_method',
   'est_complexity', 'disposition', 'skip_reason',

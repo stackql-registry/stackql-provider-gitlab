@@ -1,5 +1,5 @@
 {
-  "description": "Final service split for the gitlab provider. The generator assigns each mapped inventory row to a service: the 'overrides' map (keyed by proposed_resource) wins, otherwise the inventory's proposed_service is used. Services not in 'services' fail generation.",
+  "description": "Final service split for the gitlab provider. The generator assigns each mapped inventory row to a service: the 'overrides' map (keyed by proposed_resource) wins, otherwise the inventory's proposed_service (from SERVICE_RULES in lib/schema_walk.mjs) is used. Services not in 'services' fail generation; 'descriptions' feed provider.yaml and the service doc info blocks.",
   "services": [
     "projects",
     "groups",
@@ -20,18 +20,27 @@
     "ml",
     "duo"
   ],
+  "descriptions": {
+    "projects": "Projects and project-scoped configuration - project details, forks, topics, labels, milestones, releases, environments, deployments, branch rules, repository and statistics.",
+    "groups": "Groups, namespaces and group-scoped resources - group details, descendant and shared groups, members, epics, iterations, contacts and organizations.",
+    "users": "Users and access - user details, the current user, user permissions on projects and groups, and to-do items.",
+    "issues": "Issues and time tracking - project and group issues, issue status counts, issue access levels and timelogs.",
+    "merge_requests": "Merge requests - project and group merge requests, merge request details, violations and access levels.",
+    "ci": "CI/CD - pipelines, jobs, runners, pipeline schedules, pipeline analytics, CI variables, job token scope and CI/CD settings.",
+    "work_items": "Work items - group work items, work item types and state counts.",
+    "security": "Security and compliance - vulnerabilities, vulnerability statistics and scanners, security policies, dependencies (SBOM), DAST profiles and compliance frameworks.",
+    "packages": "Packages and registries - packages, container repositories, container protection rules, dependency proxy and cleanup policies.",
+    "snippets": "Snippets - instance and project snippets.",
+    "audit": "Audit - audit event definitions.",
+    "boards": "Issue and epic boards - project, group and instance boards and board lists.",
+    "metadata": "Instance metadata - GitLab version and revision, current license and query complexity.",
+    "analytics": "Analytics - usage trends, DevOps adoption, value streams, DORA performance scores, code coverage, contributions and customizable dashboards.",
+    "admin": "Administration - Geo nodes, license history, subscription entries and billable user previews.",
+    "workspaces": "Remote development workspaces.",
+    "ml": "Machine learning model registry - experiments.",
+    "duo": "GitLab Duo - AI chat context presets and agentic workflows."
+  },
   "overrides": {
-    "dependency": "security",
-    "usage_trends_measurements": "analytics",
-    "devops_adoption_enabled_namespaces": "analytics",
-    "geo_node": "admin",
-    "license_history_entries": "admin",
-    "subscription_future_entries": "admin",
-    "workspace": "workspaces",
-    "workspaces": "workspaces",
-    "ml_experiment": "ml",
-    "ai_chat_context_presets": "duo",
-    "iteration": "groups",
     "timelogs": "issues"
   }
 }
