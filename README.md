@@ -40,7 +40,7 @@ To build or test the provider you will need:
 1. Node.js 20+ and GNU make (Linux, macOS or WSL)
 2. A `stackql` binary - `$STACKQL`, `./stackql`, or on `PATH` (see [StackQL](https://github.com/stackql/stackql))
 3. Python 3 for the smoke suite (a venv with `pystackql` is created on demand)
-4. yarn for the docs microsite
+4. yarn and Node 22.12+ for the docs microsite
 5. A gitlab.com personal access token with `read_api` scope for the authenticated smoke tier (optional - see `.env.example`)
 
 Install build dependencies:
@@ -130,7 +130,7 @@ make smoke-live
 
 1. Author the landing page content in `provider-dev/docgen/provider-data/headerContent1.txt` and `headerContent2.txt` (installation, the read-only scope, PAT creation, `GITLAB_TOKEN` / `GITLAB_HOST`, example queries).
 2. `make docs` - runs `@stackql/provider-utils` docgen against the generated provider into `website/docs/`, then `website/scripts/sanitize-docs.mjs` (escapes description content MDX v3 would parse as JSX). No `--snake-case-aliases` flag: the columns are already snake_case in the provider docs.
-3. `make website` - `yarn install && yarn build` (needs network access to GitHub for the shared config). `make website-start` runs the dev server.
+3. `make website` - `yarn install && yarn build` (needs network access to GitHub for the shared config, and Node 22.12 or newer: the lockfile resolves `mermaid@12`, which the Docusaurus mermaid theme pulls in and which drops Node 20). `make website-start` runs the dev server.
 
 The site publishes via GitHub Pages (`.github/workflows/prod-web-deploy.yml` on pushes to `main` touching `website/**`); DNS: `gitlab-provider.stackql.io` CNAME -> `stackql.github.io.`
 
