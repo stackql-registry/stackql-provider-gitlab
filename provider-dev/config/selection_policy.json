@@ -1,0 +1,140 @@
+{
+  "description": "Selection-set policy applied uniformly by generate_provider.mjs via lib/schema_walk.mjs. The query text and the responses.200 schema are generated from the same resolved field list. Never hand-tuned per resource: every rule here applies to every resource.",
+  "rules": {
+    "scalarAndEnumFields": "select every field on the node type whose named type is a scalar or an enum, including lists of scalars/enums (projected as JSON arrays)",
+    "excludeFieldsWithRequiredArgs": "fields that declare one or more required arguments (non-null with no default) are not selectable bare and are excluded",
+    "excludeFieldNamePatterns": "fields whose name matches any of these regular expressions are excluded uniformly; the *Html fields are server-rendered duplicates of their markdown source fields and cost complexity and payload for no relational value",
+    "nodeTypeFieldExclusions": "per node type, named fields excluded so the generated query fits complexityBudget; derived by trim_to_budget.mjs from measured per-field costs (field_costs/<Type>.json): highest-cost unprotected fields first, with the evidence recorded alongside. Never hand-picked.",
+    "nestedIdentity": "for each node-type field named in nestedIdentityAllowlist whose type is a single (non-list) object, select the intersection of the allowlisted subfields that exist on that object type as scalars/enums; projected as a JSON object column",
+    "columnCasing": "every selected field is aliased in the query to its snake_case form (fullPath -> full_path), so response keys, the response schema and DESCRIBE all present snake_case columns without engine-side aliasing",
+    "complexityBudget": "the score every generated query must fit: the anonymous gitlab.com limit (200; the authenticated limit is 250) less a margin for measurement drift, so both anonymous and token-bearing callers are served",
+    "budgetProtectedFields": "fields never excluded by the budget trim, whatever their cost: identity, state, timestamps and the merge/approval state the documented queries depend on",
+    "sqlReservedColumnNames": "snake_case names the engine rejects as bare column identifiers (measured 2026-09-25 against stackql v0.12.718 with .scratch-style mock probes: the stackql parser rejects all/exists/from/group/limit/release/to and the SQLite stage rejects default/primary; neither double quotes nor backticks rescue them); such columns and parameters get reservedColumnSuffix appended (exists -> exists_, group -> group_)",
+    "unstableFields": "per node type, fields whose GitLab resolver has been observed to time out on large result sets (a GraphQL error fails the whole query, engine policy); excluded uniformly wherever the node type is selected, with the observation recorded"
+  },
+  "excludeFieldNamePatterns": [
+    "Html$"
+  ],
+  "nodeTypeFieldExclusions": {
+    "MergeRequest": {
+      "evidence": "measured 245 against budget 190 on 2026-09-25 via measure_field_costs.mjs (project.mergeRequests); highest-cost unprotected fields excluded until the projected score (187) fits",
+      "fields": [
+        "availableAutoMergeStrategies",
+        "defaultMergeCommitMessage",
+        "defaultSquashCommitMessage",
+        "diffHeadSha",
+        "divergedFromTargetBranch",
+        "hasSecurityReports",
+        "mergeableDiscussionsState",
+        "rebaseInProgress",
+        "securityReportsUpToDateOnTargetBranch",
+        "shouldBeRebased",
+        "sourceBranchExists",
+        "sourceBranchProtected",
+        "subscribed"
+      ],
+      "costs": {
+        "availableAutoMergeStrategies": 4,
+        "defaultMergeCommitMessage": 4,
+        "defaultSquashCommitMessage": 4,
+        "diffHeadSha": 4,
+        "divergedFromTargetBranch": 4,
+        "hasSecurityReports": 4,
+        "mergeableDiscussionsState": 4,
+        "rebaseInProgress": 4,
+        "securityReportsUpToDateOnTargetBranch": 4,
+        "shouldBeRebased": 4,
+        "sourceBranchExists": 4,
+        "sourceBranchProtected": 4,
+        "subscribed": 10
+      }
+    }
+  },
+  "nestedIdentityAllowlist": {
+    "author": [
+      "id",
+      "username",
+      "name"
+    ],
+    "user": [
+      "id",
+      "username",
+      "name"
+    ],
+    "namespace": [
+      "id",
+      "fullPath",
+      "name"
+    ],
+    "group": [
+      "id",
+      "fullPath",
+      "name"
+    ],
+    "project": [
+      "id",
+      "fullPath",
+      "name"
+    ],
+    "milestone": [
+      "id",
+      "title"
+    ],
+    "accessLevel": [
+      "integerValue",
+      "stringValue"
+    ]
+  },
+  "pageSize": 100,
+  "complexityBudget": 190,
+  "budgetProtectedFields": [
+    "approvalsLeft",
+    "approvalsRequired",
+    "approved",
+    "closedAt",
+    "conflicts",
+    "createdAt",
+    "description",
+    "detailedMergeStatus",
+    "draft",
+    "fullPath",
+    "id",
+    "iid",
+    "mergeable",
+    "mergedAt",
+    "name",
+    "reportType",
+    "severity",
+    "sourceBranch",
+    "state",
+    "status",
+    "targetBranch",
+    "title",
+    "updatedAt",
+    "webUrl"
+  ],
+  "sqlReservedColumnNames": [
+    "all",
+    "default",
+    "exists",
+    "from",
+    "group",
+    "limit",
+    "primary",
+    "release",
+    "to"
+  ],
+  "reservedColumnSuffix": "_",
+  "unstableFields": {
+    "Project": {
+      "containerRepositoriesCount": "2026-09-25: 'Timeout on Project.containerRepositoriesCount' from gitlab.com on group_projects for gitlab-org (thousands of projects); the per-project registry count resolver exceeds GitLab's field timeout under load and the error fails the whole page"
+    },
+    "Group": {
+      "containerRepositoriesCount": "same registry-count resolver as the observed Project.containerRepositoriesCount timeout, aggregated over every project in the group; excluded with it"
+    },
+    "CiRunner": {
+      "jobCount": "2026-09-25: Project.runners on gitlab.com (shared fleet, 100 nodes) answers in 1 s with id/description/status and 'Request timed out' with jobCount projectCount added - per-runner aggregations over the shared fleet",
+      "projectCount": "2026-09-25: same probe as jobCount; the two together reproduce the timeout, the rest of the CiRunner selection does not"
+    }
+  }
+}

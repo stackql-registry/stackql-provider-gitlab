@@ -1,0 +1,52 @@
+{
+  "description": "UAT fixtures on gitlab.com for the authenticated smoke tier. Created idempotently by tests/fixtures/seed_fixtures.mjs (make seed-fixtures) with a token that has the api scope; the read-only provider then queries them back. Group and project paths can be overridden with GITLAB_SMOKE_GROUP / GITLAB_SMOKE_PROJECT.",
+  "group": {
+    "path": "stackql-io",
+    "name": "StackQL",
+    "visibility": "public",
+    "description": "Read-only mirrors of StackQL repositories. The canonical source, issues, discussions and stars live on GitHub: https://github.com/stackql"
+  },
+  "subgroup": {
+    "path": "smoke",
+    "name": "smoke",
+    "visibility": "private",
+    "description": "Subgroup fixture for the stackql gitlab provider smoke suite (group_descendant_groups)."
+  },
+  "mirror": {
+    "path": "stackql",
+    "name": "stackql",
+    "importUrl": "https://github.com/stackql/stackql.git",
+    "visibility": "public",
+    "description": "Read-only mirror of https://github.com/stackql/stackql, the canonical repository. Please star, open issues and contribute on GitHub.",
+    "disableFeatures": ["issues", "merge_requests", "wiki", "snippets", "forking"]
+  },
+  "smokeProject": {
+    "path": "stackql-provider-smoke",
+    "name": "stackql-provider-smoke",
+    "visibility": "private",
+    "description": "Fixture project for the stackql gitlab provider smoke suite: labels, milestones, issues, a merge request, a release, CI variables, an environment and a board, queried back read-only.",
+    "defaultBranch": "main",
+    "featureBranch": "smoke-feature",
+    "tag": "v0.0.1-smoke",
+    "labels": [
+      { "name": "smoke::bug", "color": "#d9534f", "description": "smoke fixture: bug" },
+      { "name": "smoke::feature", "color": "#428bca", "description": "smoke fixture: feature" },
+      { "name": "smoke::docs", "color": "#5cb85c", "description": "smoke fixture: docs" }
+    ],
+    "milestone": { "title": "smoke-m1", "description": "smoke fixture milestone" },
+    "issues": [
+      { "title": "smoke: bug report", "description": "A fixture issue with a label, milestone and weight.", "labels": "smoke::bug", "weight": 3, "milestone": true },
+      { "title": "smoke: feature request", "description": "A fixture issue.", "labels": "smoke::feature" },
+      { "title": "smoke: closed issue", "description": "A fixture issue that is closed.", "labels": "smoke::docs", "state": "closed" }
+    ],
+    "mergeRequest": { "title": "smoke: feature merge request", "description": "Fixture MR from smoke-feature to main; left open.", "labels": "smoke::feature" },
+    "release": { "name": "smoke release v0.0.1", "description": "Fixture release for project_releases." },
+    "ciVariables": [
+      { "key": "SMOKE_VAR", "value": "smoke", "masked": false, "protected": false },
+      { "key": "SMOKE_SECRET", "value": "smokesecretvalue", "masked": true, "protected": false }
+    ],
+    "environment": { "name": "smoke-staging", "externalUrl": "https://smoke-staging.example.com", "tier": "staging" },
+    "board": { "name": "smoke board" }
+  },
+  "groupLabel": { "name": "group::smoke", "color": "#f0ad4e", "description": "smoke fixture: group label" }
+}

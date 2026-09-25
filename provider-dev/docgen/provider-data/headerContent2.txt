@@ -1,0 +1,349 @@
+See also:
+[[` SHOW `]](https://stackql.io/docs/language-spec/show) [[` DESCRIBE `]](https://stackql.io/docs/language-spec/describe)  [[` REGISTRY `]](https://stackql.io/docs/language-spec/registry)
+* * *
+
+## Installation
+
+To pull the latest version of the `gitlab` provider, run the following command:
+
+```bash
+REGISTRY PULL gitlab;
+```
+> To view previous provider versions or to pull a specific provider version, see [here](https://stackql.io/docs/language-spec/registry).
+
+## Read-only scope
+
+Every resource in this provider exposes `SELECT` only. The provider is generated from GitLab's GraphQL schema, and the StackQL GraphQL path is a read path: there are no `INSERT`, `UPDATE`, `DELETE` or `EXEC` methods. It is positioned as a query layer over the GitLab control plane for inventory, reporting and cross-provider joins, not as a provisioning tool.
+
+## Authentication
+
+The following system environment variable is used for authentication by default:
+
+- <CopyableCode code="GITLAB_TOKEN" /> - a GitLab personal access token with the `read_api` scope, sent as a bearer token (see <a href="https://docs.gitlab.com/user/profile/personal_access_tokens/">Personal access tokens</a>). This is the same variable the Terraform `gitlab` provider reads.
+
+The variable is sourced at runtime (from the local machine or as a CI variable/secret). Public data on gitlab.com is readable without a token using the `null_auth` type:
+
+```bash
+stackql shell --auth='{"gitlab": {"type": "null_auth"}}'
+```
+
+<details>
+
+<summary>Using a different environment variable</summary>
+
+To use a different environment variable (instead of the default), use the `--auth` flag of the `stackql` program.  For example:
+
+```bash
+
+AUTH='{ "gitlab": { "type": "bearer", "credentialsenvvar": "YOUR_GITLAB_TOKEN_VAR" }}'
+stackql shell --auth="${AUTH}"
+
+```
+or using PowerShell:
+
+```powershell
+
+$Auth = "{ 'gitlab': { 'type': 'bearer', 'credentialsenvvar': 'YOUR_GITLAB_TOKEN_VAR' }}"
+stackql.exe shell --auth=$Auth
+
+```
+</details>
+
+## Connecting to a GitLab instance
+
+The provider targets gitlab.com by default. `host` is a server variable that can be supplied per query (`WHERE host = 'gitlab.example.com'`) or defaulted from the <CopyableCode code="GITLAB_HOST" /> environment variable; an explicit `WHERE` value always wins:
+
+```bash
+export GITLAB_HOST=gitlab.example.com
+```
+
+The provider is generated from the gitlab.com schema, so a self-managed instance on an older GitLab version may reject fields it does not serve.
+
+## Resource scopes and parameters
+
+Resources follow the shape of the GraphQL schema:
+
+- instance-scoped resources (`gitlab.projects.projects`, `gitlab.users.users`, `gitlab.ci.runners`) take optional filters only
+- project-scoped resources are prefixed `project_` and require <CopyableCode code="full_path" /> (the project path, for example `gitlab-org/gitlab`)
+- group-scoped resources are prefixed `group_` and require <CopyableCode code="full_path" /> (the group path, for example `gitlab-org`)
+
+Filter parameters are pushed down into the GraphQL query; `SHOW METHODS` lists them. Wide selections on very large projects can take longer than stackql's default 45-second API timeout - raise it with `--apirequesttimeout 120` when that happens. Columns are snake_case, and nested identity objects (`author`, `user`, `namespace`, `group_`, `project`, `milestone`, `access_level`) are JSON columns read with `json_extract`. A handful of names that are SQL reserved words carry a trailing underscore (`exists_`, `group_`, `default_`) so they can be selected without quoting.
+
+## Example Queries
+
+Try the following queries using `stackql shell`, or run them from a script or CI pipeline with `stackql exec`.
+
+### Project inventory
+
+Every project in a group tree, with visibility and activity signals:
+
+```sql
+SELECT
+  full_path,
+  visibility,
+  archived,
+  star_count,
+  forks_count,
+  open_issues_count,
+  open_merge_requests_count,
+  last_activity_at
+FROM gitlab.groups.group_projects
+WHERE full_path = 'gitlab-org' AND include_subgroups = true
+ORDER BY last_activity_at DESC;
+```
+
+Project counts by visibility:
+
+```sql
+SELECT visibility, count(*) AS projects
+FROM gitlab.groups.group_projects
+WHERE full_path = 'gitlab-org'
+GROUP BY visibility;
+```
+
+A single project:
+
+```sql
+SELECT id, name, full_path, description, star_count, created_at,
+  json_extract(namespace, '$.full_path') AS namespace
+FROM gitlab.projects.project
+WHERE full_path = 'gitlab-org/gitlab';
+```
+
+Projects across the instance matching a search term (paginated transparently; raise `--http.response.pageLimit` for large result sets):
+
+```sql
+SELECT full_path, star_count
+FROM gitlab.projects.projects
+WHERE search = 'terraform' AND visibility_level = 'public'
+ORDER BY star_count DESC;
+```
+
+### Open merge requests by age and approval state
+
+`state` is pushed down into the query as a GraphQL enum:
+
+```sql
+SELECT
+  iid,
+  title,
+  json_extract(author, '$.username') AS author,
+  draft,
+  approved,
+  approvals_left,
+  detailed_merge_status,
+  ROUND(julianday('now') - julianday(created_at)) AS age_days
+FROM gitlab.merge_requests.project_merge_requests
+WHERE full_path = 'gitlab-org/gitlab-runner' AND state = 'opened'
+ORDER BY age_days DESC;
+```
+
+Merge requests merged in a window, with cycle time:
+
+```sql
+SELECT
+  iid,
+  title,
+  ROUND((julianday(merged_at) - julianday(created_at)) * 24, 1) AS hours_to_merge
+FROM gitlab.merge_requests.project_merge_requests
+WHERE full_path = 'gitlab-org/gitlab-runner'
+AND state = 'merged'
+AND merged_after = '2026-01-01T00:00:00Z'
+ORDER BY merged_at DESC;
+```
+
+### Pipeline failure rates
+
+Pipeline outcomes for a project:
+
+```sql
+SELECT
+  status,
+  count(*) AS pipelines,
+  ROUND(AVG(duration) / 60.0, 1) AS avg_minutes
+FROM gitlab.ci.project_pipelines
+WHERE full_path = 'gitlab-org/gitlab-runner'
+GROUP BY status
+ORDER BY pipelines DESC;
+```
+
+Failure rate across every project in a group, joining the project inventory to each project's pipelines (one pipelines request per project):
+
+```sql
+SELECT
+  p.full_path,
+  count(*) AS pipelines,
+  SUM(c.status = 'FAILED') AS failed,
+  ROUND(100.0 * SUM(c.status = 'FAILED') / count(*), 1) AS failure_pct
+FROM gitlab.groups.group_projects p
+JOIN gitlab.ci.project_pipelines c
+  ON c.full_path = p.full_path
+WHERE p.full_path = 'my-group'
+GROUP BY p.full_path
+ORDER BY failure_pct DESC;
+```
+
+Failed jobs in a pipeline:
+
+```sql
+SELECT name, status, failure_message, duration, web_path
+FROM gitlab.ci.project_jobs
+WHERE full_path = 'gitlab-org/gitlab-runner' AND pipeline_iid = '12345'
+AND status = 'FAILED';
+```
+
+### Runner fleet status
+
+Runners available to a group, with their contact recency (`gitlab.ci.runners`, the instance-wide listing, needs administrator access and returns a permission error for ordinary accounts on gitlab.com; the group and project listings are what a token can read):
+
+```sql
+SELECT
+  id,
+  description,
+  runner_type,
+  status,
+  paused,
+  contacted_at,
+  upgrade_status
+FROM gitlab.ci.group_runners
+WHERE full_path = 'my-group'
+ORDER BY contacted_at DESC;
+```
+
+Group runners that are offline, and the runners a single project can use (shared runners included):
+
+```sql
+SELECT id, description, status, contacted_at
+FROM gitlab.ci.group_runners
+WHERE full_path = 'my-group' AND status = 'OFFLINE';
+
+SELECT id, description, runner_type, status
+FROM gitlab.ci.project_runners
+WHERE full_path = 'my-group/my-project';
+```
+
+### Issues
+
+Open issues by assignee wildcard and health status:
+
+```sql
+SELECT
+  iid,
+  title,
+  severity,
+  health_status,
+  json_extract(author, '$.username') AS author,
+  json_extract(milestone, '$.title') AS milestone,
+  weight,
+  due_date
+FROM gitlab.issues.project_issues
+WHERE full_path = 'gitlab-org/gitlab' AND state = 'opened' AND assignee_wildcard_id = 'NONE'
+ORDER BY created_at;
+```
+
+`weight`, `health_status` and the epic fields are Premium features and read back as null on the free tier. Issues opened per month:
+
+```sql
+SELECT strftime('%Y-%m', created_at) AS month, count(*) AS opened
+FROM gitlab.issues.project_issues
+WHERE full_path = 'gitlab-org/gitlab-runner' AND created_after = '2026-01-01T00:00:00Z'
+GROUP BY month
+ORDER BY month;
+```
+
+### Vulnerability reporting
+
+Vulnerabilities in a group by severity and state:
+
+```sql
+SELECT severity, state, count(*) AS findings
+FROM gitlab.security.group_vulnerabilities
+WHERE full_path = 'my-group'
+GROUP BY severity, state
+ORDER BY severity, state;
+```
+
+Detected but unresolved critical findings, with the owning project:
+
+```sql
+SELECT
+  json_extract(project, '$.full_path') AS project,
+  title,
+  report_type,
+  detected_at,
+  web_url
+FROM gitlab.security.group_vulnerabilities
+WHERE full_path = 'my-group' AND severity = 'CRITICAL' AND state = 'DETECTED'
+ORDER BY detected_at;
+```
+
+### Group membership and a cross-provider join
+
+Members of a group, with access level (member listings need membership of the group; a public group's members are not readable by outsiders):
+
+```sql
+SELECT
+  json_extract(user, '$.username') AS username,
+  json_extract(user, '$.name') AS name,
+  json_extract(access_level, '$.string_value') AS access_level,
+  expires_at
+FROM gitlab.groups.group_group_members
+WHERE full_path = 'my-group';
+```
+
+GitLab group members who have no matching active Okta user (a join the SQL engine performs locally across two providers, after `REGISTRY PULL okta`):
+
+```sql
+SELECT
+  json_extract(m.user, '$.username') AS gitlab_username,
+  json_extract(m.user, '$.name') AS gitlab_name,
+  o.status AS okta_status
+FROM gitlab.groups.group_group_members m
+LEFT JOIN okta.user.users o
+  ON lower(json_extract(o.profile, '$.login')) = lower(json_extract(m.user, '$.username') || '@example.com')
+AND o.subdomain = 'my-okta-org'
+WHERE m.full_path = 'my-group'
+AND (o.status IS NULL OR o.status != 'ACTIVE');
+```
+
+### Releases, environments and packages
+
+Releases with their age:
+
+```sql
+SELECT tag_name, name, released_at,
+  ROUND(julianday('now') - julianday(released_at)) AS days_ago
+FROM gitlab.projects.project_releases
+WHERE full_path = 'gitlab-org/gitlab-runner'
+ORDER BY released_at DESC;
+```
+
+Environments and packages across a group:
+
+```sql
+SELECT name, environment_type, state, tier, external_url
+FROM gitlab.projects.project_environments
+WHERE full_path = 'my-group/my-project';
+
+SELECT json_extract(project, '$.full_path') AS project, name, version, package_type, status, created_at
+FROM gitlab.packages.group_packages
+WHERE full_path = 'my-group'
+ORDER BY created_at DESC;
+```
+
+### Instance metadata and the current user
+
+Both need a token (`metadata` and `currentUser` are null for anonymous callers, which the provider reports as an error rather than an empty result):
+
+```sql
+SELECT version, revision, enterprise FROM gitlab.metadata.metadata;
+
+SELECT id, username, name, json_extract(namespace, '$.full_path') AS namespace
+FROM gitlab.users.current_user;
+```
+
+Query complexity of the provider's own requests, as GitLab scores them (each generated query is validated against this limit at build time):
+
+```sql
+SELECT score, "limit" FROM gitlab.metadata.query_complexity;
+```

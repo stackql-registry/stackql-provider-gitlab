@@ -1,0 +1,410 @@
+scope,host_type,source_field,node_type,kind,args,scalar_enum_field_count,nested_allowlist,proposed_service,proposed_resource,proposed_method,est_complexity,disposition,skip_reason
+instance,Query,addOnPurchases,AddOnPurchase,singular,namespaceId:NamespaceID,,,,,,,skip,non_relay_list
+instance,Query,aiChatContextPresets,ContextPreset,singular,questionCount:Int; url:String; resourceId:AiModelID; projectId:ProjectID,2,,duo,ai_chat_context_presets,get,3,map,
+instance,Query,aiSlashCommands,SlashCommand,singular,url:String! (required),,,,,,,skip,non_relay_list
+instance,Query,auditEventDefinitions,AuditEventDefinition,connection,after:String; before:String; first:Int; last:Int,8,,audit,audit_event_definitions,list,11,map,
+instance,Query,boardList,BoardList,singular,id:ListID! (required); issueFilters:BoardIssueInput,10,milestone{id title},boards,board_list,get,13,map,
+instance,Query,ciApplicationSettings,CiApplicationSettings,singular,,1,,ci,ci_application_settings,get,2,map,
+instance,Query,ciDedicatedHostedRunnerFilters,CiDedicatedHostedRunnerFilters,singular,,1,,ci,ci_dedicated_hosted_runner_filters,get,2,map,
+instance,Query,ciDedicatedHostedRunnerUsage,CiDedicatedHostedRunnerUsage,connection,billingMonth:Date; year:Int; grouping:GroupingEnum; runnerId:CiRunnerID; after:String; before:String; first:Int; last:Int,6,,ci,ci_dedicated_hosted_runner_usage,list,9,map,
+instance,Query,ciMinutesProjectMonthlyUsage,CiMinutesProjectMonthlyUsage,connection,after:String; before:String; first:Int; last:Int; namespaceId:NamespaceID; date:Date,2,project{id fullPath name},ci,ci_minutes_project_monthly_usage,list,8,map,
+instance,Query,ciMinutesUsage,CiMinutesNamespaceMonthlyUsage,connection,after:String; before:String; first:Int; last:Int; namespaceId:NamespaceID; date:Date,4,,ci,ci_minutes_usage,list,7,map,
+instance,Query,ciPipelineStage,CiStage,singular,id:CiStageID! (required),3,,ci,ci_pipeline_stage,get,4,map,
+instance,Query,ciQueueingHistory,QueueingDelayHistory,singular,fromTime:Time; toTime:Time; runnerType:CiRunnerType,,,,,,,skip,no_scalar_fields_on_node
+instance,Query,ciVariables,CiInstanceVariable,connection,sort:CiVariableSort; after:String; before:String; first:Int; last:Int,9,,ci,ci_variables,list,12,map,
+instance,Query,complianceFrameworkTemplates,ComplianceFrameworkTemplate,singular,id:ComplianceManagementFrameworksTemplateRegistryTemplateID,,,,,,,skip,non_relay_list
+instance,Query,complianceRequirementControls,ComplianceRequirementControl,singular,,,,,,,,skip,no_scalar_fields_on_node
+instance,Query,containerRepository,ContainerRepositoryDetails,singular,id:ContainerRepositoryID! (required),14,project{id fullPath name},packages,container_repository,get,18,map,
+instance,Query,currentLicense,CurrentLicense,singular,,18,,metadata,current_license,get,19,map,
+instance,Query,currentUser,CurrentUser,singular,,32,namespace{id fullPath name},users,current_user,get,36,map,
+instance,Query,customDashboard,CustomDashboard,singular,id:AnalyticsCustomDashboardsDashboardID! (required),9,namespace{id fullPath name}; project{id fullPath name},analytics,custom_dashboard,get,16,map,
+instance,Query,customDashboards,CustomDashboardInterface,connection,organizationId:OrganizationsOrganizationID; namespaceId:NamespaceID; createdById:UserID; search:String; scope:CustomDashboardScope; after:String; before:String; first:Int; last:Int,,,,,,,skip,interface_typed_nodes
+instance,Query,customSystemDashboard,CustomSystemDashboard,singular,slug:String! (required),7,,analytics,custom_system_dashboard,get,8,map,
+instance,Query,dependency,Dependency,singular,id:SbomOccurrenceID! (required),5,,security,dependency,get,6,map,
+instance,Query,designManagement,DesignManagement,singular,,,,,,,,skip,no_scalar_fields_on_node
+instance,Query,devopsAdoptionEnabledNamespaces,DevopsAdoptionEnabledNamespace,connection,displayNamespaceId:NamespaceID; after:String; before:String; first:Int; last:Int,1,namespace{id fullPath name},analytics,devops_adoption_enabled_namespaces,list,7,map,
+instance,Query,echo,String,singular,text:String! (required),,,,,,,skip,scalar_or_enum_field
+instance,Query,epicBoardList,EpicList,singular,id:BoardsEpicListID! (required); epicFilters:EpicFilters,5,,boards,epic_board_list,get,6,map,
+instance,Query,frecentGroups,Group,singular,,,,,,,,skip,non_relay_list
+instance,Query,frecentProjects,Project,singular,,,,,,,,skip,non_relay_list
+instance,Query,geoNode,GeoNode,singular,name:String,14,,admin,geo_node,get,15,map,
+instance,Query,gitpodEnabled,Boolean,singular,,,,,,,,skip,scalar_or_enum_field
+instance,Query,group,Group,singular,fullPath:ID! (required),52,,groups,group,get,53,map,
+instance,Query,groups,Group,connection,ids:[ID!]; topLevelOnly:Boolean; ownedOnly:Boolean; search:String; sort:String; parentPath:ID; allAvailable:Boolean; markedForDeletionOn:Date; active:Boolean; after:String; before:String; first:Int; last:Int,52,,groups,groups,list,55,map,
+instance,Query,instanceSecurityDashboard,InstanceSecurityDashboard,singular,,,,,,,,skip,no_scalar_fields_on_node
+instance,Query,issue,Issue,singular,id:IssueID! (required),43,author{id username name}; milestone{id title},issues,issue,get,49,map,
+instance,Query,iteration,Iteration,singular,id:IterationID! (required),14,group{id fullPath name},groups,iteration,get,18,map,
+instance,Query,jobs,CiJobInterface,connection,statuses:[CiJobStatus!]; after:String; before:String; first:Int; last:Int,,,,,,,skip,interface_typed_nodes
+instance,Query,licenseHistoryEntries,LicenseHistoryEntry,connection,after:String; before:String; first:Int; last:Int,12,,admin,license_history_entries,list,15,map,
+instance,Query,mergeRequest,MergeRequest,singular,id:MergeRequestID! (required),61,author{id username name}; project{id fullPath name}; milestone{id title},merge_requests,merge_request,get,70,map,
+instance,Query,metadata,Metadata,singular,,3,,metadata,metadata,get,4,map,
+instance,Query,milestone,Milestone,singular,id:MilestoneID! (required),15,group{id fullPath name}; project{id fullPath name},projects,milestone,get,22,map,
+instance,Query,mlExperiment,MlExperiment,singular,id:MlExperimentID! (required),7,,ml,ml_experiment,get,8,map,
+instance,Query,namespace,Namespace,singular,fullPath:ID! (required),21,,groups,namespace,get,22,map,
+instance,Query,namespaceSecurityProjects,Project,connection,namespaceId:NamespaceID! (required); search:String; vulnerabilityCountFilters:[VulnerabilityCountFilterInput!]; securityAnalyzerFilters:[AnalyzerFilterInput!]; attributeFilters:[AttributeFilterInput!]; includeSubgroups:Boolean; after:String; before:String; first:Int; last:Int,68,namespace{id fullPath name}; group{id fullPath name},security,namespace_security_projects,list,77,map,
+instance,Query,package,PackageDetailsType,singular,id:PackagesPackageID! (required),19,project{id fullPath name},packages,package,get,23,map,
+instance,Query,project,Project,singular,fullPath:ID! (required),68,namespace{id fullPath name}; group{id fullPath name},projects,project,get,75,map,
+instance,Query,projectComplianceViolation,ProjectComplianceViolation,singular,id:ComplianceManagementProjectsComplianceViolationID! (required),5,project{id fullPath name},security,project_compliance_violation,get,9,map,
+instance,Query,projects,Project,connection,membership:Boolean; search:String; searchNamespaces:Boolean; topics:[String!]; personal:Boolean; sort:String; namespacePath:ID; ids:[ID!]; fullPaths:[String!]; withIssuesEnabled:Boolean; withMergeRequestsEnabled:Boolean; archived:ProjectArchived; minAccessLevel:AccessLevelEnum; programmingLanguageName:String; aimedForDeletion:Boolean; notAimedForDeletion:Boolean; markedForDeletionOn:Date; active:Boolean; visibilityLevel:VisibilityLevelsEnum; lastRepositoryCheckFailed:Boolean; includeHidden:Boolean; after:String; before:String; first:Int; last:Int,68,namespace{id fullPath name}; group{id fullPath name},projects,projects,list,77,map,
+instance,Query,queryComplexity,QueryComplexity,singular,,2,,metadata,query_complexity,get,3,map,
+instance,Query,runner,CiRunner,singular,id:CiRunnerID! (required),23,,ci,runner,get,24,map,
+instance,Query,runnerUsage,CiRunnerUsage,singular,runnerType:CiRunnerType; fullPath:ID; fromDate:Date; toDate:Date; runnersLimit:Int,,,,,,,skip,non_relay_list
+instance,Query,runnerUsageByProject,CiRunnerUsageByProject,singular,runnerType:CiRunnerType; fullPath:ID; fromDate:Date; toDate:Date; projectsLimit:Int,,,,,,,skip,non_relay_list
+instance,Query,runners,CiRunner,connection,paused:Boolean; status:CiRunnerStatus; type:CiRunnerType; tagList:[String!]; search:String; sort:CiRunnerSort; upgradeStatus:CiRunnerUpgradeStatus; creatorId:UserID; creatorUsername:String; versionPrefix:String; after:String; before:String; first:Int; last:Int,23,,ci,runners,list,26,map,
+instance,Query,securityConfiguration,SecurityConfiguration,singular,projectId:ProjectID! (required),29,,security,security_configuration,get,30,map,
+instance,Query,selfManagedUsersQueuedForRolePromotion,UsersQueuedForRolePromotion,connection,after:String; before:String; first:Int; last:Int,,,,,,,skip,no_scalar_fields_on_node
+instance,Query,snippets,Snippet,connection,ids:[SnippetID!]; visibility:VisibilityScopesEnum; authorId:UserID; projectId:ProjectID; type:TypeEnum; explore:Boolean; after:String; before:String; first:Int; last:Int,14,author{id username name}; project{id fullPath name},snippets,snippets,list,23,map,
+instance,Query,subscriptionFutureEntries,SubscriptionFutureEntry,connection,after:String; before:String; first:Int; last:Int,8,,admin,subscription_future_entries,list,11,map,
+instance,Query,timelogs,Timelog,connection,startDate:Time; endDate:Time; startTime:Time; endTime:Time; projectId:ProjectID; groupId:GroupID; username:String; sort:TimelogSort; after:String; before:String; first:Int; last:Int,4,user{id username name}; project{id fullPath name},misc,timelogs,list,13,map,
+instance,Query,todo,Todo,singular,id:TodoID! (required),9,author{id username name}; group{id fullPath name}; project{id fullPath name},users,todo,get,19,map,
+instance,Query,topics,Topic,connection,search:String; after:String; before:String; first:Int; last:Int,5,,projects,topics,list,8,map,
+instance,Query,usageTrendsMeasurements,UsageTrendsMeasurement,connection,identifier:MeasurementIdentifier! (required); recordedAfter:Time; recordedBefore:Time; after:String; before:String; first:Int; last:Int,3,,analytics,usage_trends_measurements,list,6,map,
+instance,Query,user,UserCore,singular,id:UserID; username:String,30,namespace{id fullPath name},users,user,get,34,map,
+instance,Query,users,UserCore,connection,ids:[ID!]; usernames:[String!]; sort:Sort; search:String; admins:Boolean; active:Boolean; humans:Boolean; groupId:GroupID; after:String; before:String; first:Int; last:Int,30,namespace{id fullPath name},users,users,list,36,map,
+instance,Query,vulnerabilities,Vulnerability,connection,projectId:[ID!]; reportType:[VulnerabilityReportType!]; severity:[VulnerabilitySeverity!]; state:[VulnerabilityState!]; owaspTopTen:[VulnerabilityOwaspTop10!]; identifierName:String; scanner:[String!]; scannerId:[VulnerabilitiesScannerID!]; sort:VulnerabilitySort; hasResolution:Boolean; hasAiResolution:Boolean; hasIssues:Boolean; hasMergeRequest:Boolean; image:[String!]; clusterId:[ClustersClusterID!]; clusterAgentId:[ClustersAgentID!]; dismissalReason:[VulnerabilityDismissalReason!]; hasRemediations:Boolean; after:String; before:String; first:Int; last:Int,27,project{id fullPath name},security,vulnerabilities,list,33,map,
+instance,Query,vulnerabilitiesCountByDay,VulnerabilitiesCountByDay,connection,startDate:ISO8601Date! (required); endDate:ISO8601Date! (required); after:String; before:String; first:Int; last:Int,8,,security,vulnerabilities_count_by_day,list,11,map,
+instance,Query,vulnerability,Vulnerability,singular,id:VulnerabilityID! (required),27,project{id fullPath name},security,vulnerability,get,31,map,
+instance,Query,workspace,Workspace,singular,id:RemoteDevelopmentWorkspaceID! (required),16,user{id username name},workspaces,workspace,get,20,map,
+instance,Query,workspaces,Workspace,connection,ids:[RemoteDevelopmentWorkspaceID!]; projectIds:[ProjectID!]; actualStates:[String!]; userIds:[ProjectID!]; agentIds:[ClustersAgentID!]; after:String; before:String; first:Int; last:Int,16,user{id username name},workspaces,workspaces,list,22,map,
+project,Project,actualRepositorySizeLimit,Float,singular,,,,,,,,skip,scalar_or_enum_field
+project,Project,adminEditPath,String,singular,,,,,,,,skip,scalar_or_enum_field
+project,Project,adminShowPath,String,singular,,,,,,,,skip,scalar_or_enum_field
+project,Project,agentConfigurations,AgentConfiguration,connection,after:String; before:String; first:Int; last:Int,1,,projects,project_agent_configurations,list,4,map,
+project,Project,alertManagementAlert,AlertManagementAlert,singular,iid:String; statuses:[AlertManagementStatus!]; sort:AlertManagementAlertSort; domain:AlertManagementDomainFilter!; search:String; assigneeUsername:String,19,,projects,project_alert_management_alert,get,20,map,
+project,Project,alertManagementAlertStatusCounts,AlertManagementAlertStatusCountsType,singular,search:String; assigneeUsername:String,6,,projects,project_alert_management_alert_status_counts,get,7,map,
+project,Project,alertManagementAlerts,AlertManagementAlert,connection,iid:String; statuses:[AlertManagementStatus!]; sort:AlertManagementAlertSort; domain:AlertManagementDomainFilter!; search:String; assigneeUsername:String; after:String; before:String; first:Int; last:Int,19,,projects,project_alert_management_alerts,list,22,map,
+project,Project,alertManagementHttpIntegrations,AlertManagementHttpIntegration,connection,id:AlertManagementHttpIntegrationID; types:[AlertManagementIntegrationType!]; after:String; before:String; first:Int; last:Int,7,,projects,project_alert_management_http_integrations,list,10,map,
+project,Project,alertManagementPayloadFields,AlertManagementPayloadAlertField,singular,payloadExample:String! (required),,,,,,,skip,non_relay_list
+project,Project,allowMergeOnSkippedPipeline,Boolean,singular,,,,,,,,skip,scalar_or_enum_field
+project,Project,allowsMultipleMergeRequestAssignees,Boolean,singular,,,,,,,,skip,scalar_or_enum_field
+project,Project,allowsMultipleMergeRequestReviewers,Boolean,singular,,,,,,,,skip,scalar_or_enum_field
+project,Project,analyzerStatuses,AnalyzerProjectStatusType,singular,,,,,,,,skip,non_relay_list
+project,Project,apiFuzzingCiConfiguration,ApiFuzzingCiConfiguration,singular,,1,,ci,project_api_fuzzing_ci_configuration,get,2,map,
+project,Project,approvalPolicies,ApprovalPolicy,connection,relationship:SecurityPolicyRelationType; includeUnscoped:Boolean; deduplicatePolicies:Boolean; after:String; before:String; first:Int; last:Int,8,,security,project_approval_policies,list,11,map,
+project,Project,archived,Boolean,singular,,,,,,,,skip,scalar_or_enum_field
+project,Project,autocloseReferencedIssues,Boolean,singular,,,,,,,,skip,scalar_or_enum_field
+project,Project,autocompleteUsers,AutocompletedUser,singular,search:String,,,,,,,skip,non_relay_list
+project,Project,availableDeployKeys,AccessLevelDeployKey,connection,after:String; before:String; first:Int; last:Int; titleQuery:String,3,user{id username name},projects,project_available_deploy_keys,list,9,map,
+project,Project,avatarUrl,String,singular,,,,,,,,skip,scalar_or_enum_field
+project,Project,board,Board,singular,id:BoardID! (required),9,milestone{id title},boards,project_board,get,12,map,
+project,Project,boards,Board,connection,id:BoardID; after:String; before:String; first:Int; last:Int,9,milestone{id title},boards,project_boards,list,14,map,
+project,Project,branchRules,BranchRule,connection,buildMissing:Boolean; after:String; first:Int,7,,projects,project_branch_rules,list,10,map,
+project,Project,ciAccessAuthorizedAgents,ClusterAgentAuthorizationCiAccess,connection,after:String; before:String; first:Int; last:Int,1,,ci,project_ci_access_authorized_agents,list,4,map,
+project,Project,ciCdSettings,ProjectCiCdSetting,singular,,15,project{id fullPath name},ci,project_ci_cd_settings,get,19,map,
+project,Project,ciConfigPathOrDefault,String,singular,,,,,,,,skip,scalar_or_enum_field
+project,Project,ciJobTokenScope,CiJobTokenScopeType,singular,,4,,ci,project_ci_job_token_scope,get,5,map,
+project,Project,ciTemplate,CiTemplate,singular,name:String! (required),2,,ci,project_ci_template,get,3,map,
+project,Project,ciVariables,CiProjectVariable,connection,sort:CiVariableSort; after:String; before:String; first:Int; last:Int,10,,ci,project_ci_variables,list,13,map,
+project,Project,clusterAgent,ClusterAgent,singular,hasVulnerabilities:Boolean; hasWorkspacesAgentConfig:Boolean; hasRemoteDevelopmentEnabled:Boolean; name:String! (required),6,project{id fullPath name},projects,project_cluster_agent,get,10,map,
+project,Project,clusterAgents,ClusterAgent,connection,hasVulnerabilities:Boolean; hasWorkspacesAgentConfig:Boolean; hasRemoteDevelopmentEnabled:Boolean; after:String; before:String; first:Int; last:Int,6,project{id fullPath name},projects,project_cluster_agents,list,12,map,
+project,Project,codeCoverageSummary,CodeCoverageSummary,singular,,3,,analytics,project_code_coverage_summary,get,4,map,
+project,Project,complianceFrameworks,ComplianceFramework,connection,after:String; before:String; first:Int; last:Int; sort:ComplianceFrameworkSort,8,,security,project_compliance_frameworks,list,11,map,
+project,Project,complianceStandardsAdherence,ComplianceStandardsAdherence,connection,filters:ComplianceStandardsProjectAdherenceInput; after:String; before:String; first:Int; last:Int,5,project{id fullPath name},security,project_compliance_standards_adherence,list,11,map,
+project,Project,componentUsages,CiCatalogResourceComponentUsage,connection,after:String; before:String; first:Int; last:Int,3,,projects,project_component_usages,list,6,map,
+project,Project,containerProtectionRepositoryRules,ContainerProtectionRepositoryRule,connection,after:String; before:String; first:Int; last:Int,3,,packages,project_container_protection_repository_rules,list,6,map,
+project,Project,containerProtectionTagRules,ContainerProtectionTagRule,connection,after:String; before:String; first:Int; last:Int,5,,packages,project_container_protection_tag_rules,list,8,map,
+project,Project,containerRegistryEnabled,Boolean,singular,,,,,,,,skip,scalar_or_enum_field
+project,Project,containerRepositories,ContainerRepository,connection,name:String; sort:ContainerRepositorySort; after:String; before:String; first:Int; last:Int,12,project{id fullPath name},packages,project_container_repositories,list,18,map,
+project,Project,containerRepositoriesCount,Int,singular,,,,,,,,skip,scalar_or_enum_field
+project,Project,containerScanningForRegistryEnabled,Boolean,singular,,,,,,,,skip,scalar_or_enum_field
+project,Project,containerTagsExpirationPolicy,ContainerTagsExpirationPolicy,singular,,9,,packages,project_container_tags_expiration_policy,get,10,map,
+project,Project,corpuses,CoverageFuzzingCorpus,connection,after:String; before:String; first:Int; last:Int,1,,security,project_corpuses,list,4,map,
+project,Project,createdAt,Time,singular,,,,,,,,skip,scalar_or_enum_field
+project,Project,customAttributes,CustomAttribute,singular,,,,,,,,skip,non_relay_list
+project,Project,dastProfile,DastProfile,singular,hasDastProfileSchedule:Boolean; id:DastProfileID! (required),5,,security,project_dast_profile,get,6,map,
+project,Project,dastProfiles,DastProfile,connection,hasDastProfileSchedule:Boolean; after:String; before:String; first:Int; last:Int,5,,security,project_dast_profiles,list,8,map,
+project,Project,dastScannerProfiles,DastScannerProfile,connection,after:String; before:String; first:Int; last:Int,9,,security,project_dast_scanner_profiles,list,12,map,
+project,Project,dastSiteProfile,DastSiteProfile,singular,id:DastSiteProfileID! (required),14,,security,project_dast_site_profile,get,15,map,
+project,Project,dastSiteProfiles,DastSiteProfile,connection,after:String; before:String; first:Int; last:Int,14,,security,project_dast_site_profiles,list,17,map,
+project,Project,dastSiteValidations,DastSiteValidation,connection,normalizedTargetUrls:[String!]; status:DastSiteValidationStatusEnum; after:String; before:String; first:Int; last:Int,4,,security,project_dast_site_validations,list,7,map,
+project,Project,dataTransfer,ProjectDataTransfer,singular,from:Date; to:Date,1,,projects,project_data_transfer,get,2,map,
+project,Project,dependencies,Dependency,connection,sort:DependencySort; packageManagers:[PackageManager!]; componentNames:[String!]; componentIds:[SbomComponentID!]; sourceTypes:[SbomSourceType!]; componentVersions:[String!]; after:String; before:String; first:Int; last:Int,5,,security,project_dependencies,list,8,map,
+project,Project,dependencyProxyPackagesSetting,DependencyProxyPackagesSetting,singular,,3,,packages,project_dependency_proxy_packages_setting,get,4,map,
+project,Project,deployment,Deployment,singular,iid:ID! (required),12,,projects,project_deployment,get,13,map,
+project,Project,description,String,singular,,,,,,,,skip,scalar_or_enum_field
+project,Project,descriptionHtml,String,singular,,,,,,,,skip,scalar_or_enum_field
+project,Project,detailedImportStatus,DetailedImportStatus,singular,,7,,projects,project_detailed_import_status,get,8,map,
+project,Project,dora,Dora,singular,,,,,,,,skip,no_scalar_fields_on_node
+project,Project,duoWorkflowEvents,DuoWorkflowEvent,connection,workflowId:AiDuoWorkflowsWorkflowID! (required); after:String; before:String; first:Int; last:Int,8,,duo,project_duo_workflow_events,list,11,map,
+project,Project,duoWorkflowWorkflows,DuoWorkflow,connection,projectPath:ID; type:String; excludeTypes:[String!]; sort:DuoWorkflowsWorkflowSort; environment:WorkflowEnvironment; workflowId:AiDuoWorkflowsWorkflowID; ids:[AiDuoWorkflowsWorkflowID!]; search:String; statusGroup:DuoWorkflowStatusGroup; updatedAfter:ISO8601DateTime; after:String; before:String; first:Int; last:Int,29,user{id username name}; namespace{id fullPath name}; project{id fullPath name},duo,project_duo_workflow_workflows,list,41,map,
+project,Project,editPath,String,singular,,,,,,,,skip,scalar_or_enum_field
+project,Project,environment,Environment,singular,name:String; search:String; states:[String!]; type:String,17,,projects,project_environment,get,18,map,
+project,Project,environments,Environment,connection,name:String; search:String; states:[String!]; type:String; after:String; before:String; first:Int; last:Int,17,,projects,project_environments,list,20,map,
+project,Project,forkTargets,Namespace,connection,search:String; after:String; before:String; first:Int; last:Int,21,,projects,project_fork_targets,list,24,map,
+project,Project,forkedFrom,Project,singular,,68,namespace{id fullPath name}; group{id fullPath name},projects,project_forked_from,get,75,map,
+project,Project,forkingAccessLevel,ProjectFeatureAccess,singular,,2,,projects,project_forking_access_level,get,3,map,
+project,Project,forksCount,Int,singular,,,,,,,,skip,scalar_or_enum_field
+project,Project,fullPath,ID,singular,,,,,,,,skip,scalar_or_enum_field
+project,Project,gitlabSubscriptionsPreviewBillableUserChange,PreviewBillableUserChange,singular,addGroupId:Int; addUserEmails:[String!]; addUserIds:[Int!]; memberRoleId:Int; role:GitlabSubscriptionsUserRole! (required),3,,admin,project_gitlab_subscriptions_preview_billable_user_change,get,4,map,
+project,Project,group,Group,singular,,52,,projects,project_group,get,53,map,
+project,Project,hasJiraVulnerabilityIssueCreationEnabled,Boolean,singular,,,,,,,,skip,scalar_or_enum_field
+project,Project,httpUrlToRepo,String,singular,,,,,,,,skip,scalar_or_enum_field
+project,Project,id,ID,singular,,,,,,,,skip,scalar_or_enum_field
+project,Project,importStatus,String,singular,,,,,,,,skip,scalar_or_enum_field
+project,Project,incidentManagementEscalationPolicies,EscalationPolicyType,connection,name:String; after:String; before:String; first:Int; last:Int,3,,projects,project_incident_management_escalation_policies,list,6,map,
+project,Project,incidentManagementEscalationPolicy,EscalationPolicyType,singular,name:String; id:IncidentManagementEscalationPolicyID! (required),3,,projects,project_incident_management_escalation_policy,get,4,map,
+project,Project,incidentManagementOncallSchedules,IncidentManagementOncallSchedule,connection,iids:[ID!]; after:String; before:String; first:Int; last:Int,4,,projects,project_incident_management_oncall_schedules,list,7,map,
+project,Project,incidentManagementTimelineEvent,TimelineEventType,singular,incidentId:IssueID! (required); id:IncidentManagementTimelineEventID! (required),7,author{id username name},projects,project_incident_management_timeline_event,get,11,map,
+project,Project,incidentManagementTimelineEventTags,TimelineEventTagType,singular,,,,,,,,skip,non_relay_list
+project,Project,incidentManagementTimelineEvents,TimelineEventType,connection,incidentId:IssueID! (required); after:String; before:String; first:Int; last:Int,7,author{id username name},projects,project_incident_management_timeline_events,list,13,map,
+project,Project,inheritedCiVariables,InheritedCiVariable,connection,sort:CiGroupVariablesSort; after:String; before:String; first:Int; last:Int,11,,ci,project_inherited_ci_variables,list,14,map,
+project,Project,isForked,Boolean,singular,,,,,,,,skip,scalar_or_enum_field
+project,Project,issue,Issue,singular,search:String; in:[IssuableSearchableField!]; assigneeId:String; assigneeUsernames:[String!]; assigneeWildcardId:AssigneeWildcardId; authorUsername:String; closedAfter:Time; closedBefore:Time; confidential:Boolean; createdAfter:Time; createdBefore:Time; crmContactId:String; crmOrganizationId:String; dueAfter:Time; dueBefore:Time; iid:String; iids:[String!]; labelName:[String]; milestoneTitle:[String]; milestoneWildcardId:MilestoneWildcardId; myReactionEmoji:String; not:NegatedIssueFilterInput; or:UnionedIssueFilterInput; subscribed:SubscriptionStatus; types:[IssueType!]; updatedAfter:Time; updatedBefore:Time; workItemTypeIds:[WorkItemsTypeID!]; epicId:String; epicWildcardId:EpicWildcardId; includeSubepics:Boolean; iterationId:[ID]; iterationTitle:String; iterationWildcardId:IterationWildcardId; iterationCadenceId:[IterationsCadenceID!]; weight:String; weightWildcardId:WeightWildcardId; healthStatusFilter:HealthStatusFilter; sort:IssueSort; state:IssuableState; releaseTag:[String!]; releaseTagWildcardId:ReleaseTagWildcardId,43,author{id username name}; milestone{id title},issues,project_issue,get,49,map,
+project,Project,issueStatusCounts,IssueStatusCountsType,singular,search:String; in:[IssuableSearchableField!]; assigneeId:String; assigneeUsernames:[String!]; assigneeWildcardId:AssigneeWildcardId; authorUsername:String; closedAfter:Time; closedBefore:Time; confidential:Boolean; createdAfter:Time; createdBefore:Time; crmContactId:String; crmOrganizationId:String; dueAfter:Time; dueBefore:Time; iid:String; iids:[String!]; labelName:[String]; milestoneTitle:[String]; milestoneWildcardId:MilestoneWildcardId; myReactionEmoji:String; not:NegatedIssueFilterInput; or:UnionedIssueFilterInput; subscribed:SubscriptionStatus; types:[IssueType!]; updatedAfter:Time; updatedBefore:Time; workItemTypeIds:[WorkItemsTypeID!]; epicId:String; epicWildcardId:EpicWildcardId; includeSubepics:Boolean; iterationId:[ID]; iterationTitle:String; iterationWildcardId:IterationWildcardId; iterationCadenceId:[IterationsCadenceID!]; weight:String; weightWildcardId:WeightWildcardId; healthStatusFilter:HealthStatusFilter; releaseTag:[String!]; releaseTagWildcardId:ReleaseTagWildcardId,3,,issues,project_issue_status_counts,get,4,map,
+project,Project,issues,Issue,connection,search:String; in:[IssuableSearchableField!]; assigneeId:String; assigneeUsernames:[String!]; assigneeWildcardId:AssigneeWildcardId; authorUsername:String; closedAfter:Time; closedBefore:Time; confidential:Boolean; createdAfter:Time; createdBefore:Time; crmContactId:String; crmOrganizationId:String; dueAfter:Time; dueBefore:Time; iid:String; iids:[String!]; labelName:[String]; milestoneTitle:[String]; milestoneWildcardId:MilestoneWildcardId; myReactionEmoji:String; not:NegatedIssueFilterInput; or:UnionedIssueFilterInput; subscribed:SubscriptionStatus; types:[IssueType!]; updatedAfter:Time; updatedBefore:Time; workItemTypeIds:[WorkItemsTypeID!]; epicId:String; epicWildcardId:EpicWildcardId; includeSubepics:Boolean; iterationId:[ID]; iterationTitle:String; iterationWildcardId:IterationWildcardId; iterationCadenceId:[IterationsCadenceID!]; weight:String; weightWildcardId:WeightWildcardId; healthStatusFilter:HealthStatusFilter; sort:IssueSort; state:IssuableState; releaseTag:[String!]; releaseTagWildcardId:ReleaseTagWildcardId; after:String; before:String; first:Int; last:Int,43,author{id username name}; milestone{id title},issues,project_issues,list,51,map,
+project,Project,issuesAccessLevel,ProjectFeatureAccess,singular,,2,,issues,project_issues_access_level,get,3,map,
+project,Project,issuesEnabled,Boolean,singular,,,,,,,,skip,scalar_or_enum_field
+project,Project,iterationCadences,IterationCadence,connection,id:IterationsCadenceID; title:String; durationInWeeks:Int; automatic:Boolean; active:Boolean; includeAncestorGroups:Boolean; after:String; before:String; first:Int; last:Int,9,,projects,project_iteration_cadences,list,12,map,
+project,Project,iterations,Iteration,connection,timeframe:Timeframe; state:IterationState; search:String; in:[IterationSearchableField!]; id:ID; iid:ID; includeAncestors:Boolean; includeDescendants:Boolean; iterationCadenceIds:[IterationsCadenceID!]; sort:IterationSort; after:String; before:String; first:Int; last:Int,14,group{id fullPath name},projects,project_iterations,list,20,map,
+project,Project,jiraImportStatus,String,singular,,,,,,,,skip,scalar_or_enum_field
+project,Project,jiraImports,JiraImport,connection,after:String; before:String; first:Int; last:Int,6,,projects,project_jira_imports,list,9,map,
+project,Project,job,CiJob,singular,id:JobID! (required),38,project{id fullPath name},ci,project_job,get,42,map,
+project,Project,jobs,CiJob,connection,statuses:[CiJobStatus!]; withArtifacts:Boolean; kind:CiJobKind; pipelineIid:String; after:String; before:String; first:Int; last:Int,38,project{id fullPath name},ci,project_jobs,list,44,map,
+project,Project,jobsEnabled,Boolean,singular,,,,,,,,skip,scalar_or_enum_field
+project,Project,label,Label,singular,title:String! (required),9,,projects,project_label,get,10,map,
+project,Project,labels,Label,connection,title:String; searchTerm:String; searchIn:[LabelSearchFieldList!]!; includeAncestorGroups:Boolean; archived:Boolean; after:String; before:String; first:Int; last:Int,9,,projects,project_labels,list,12,map,
+project,Project,languages,RepositoryLanguage,singular,,,,,,,,skip,non_relay_list
+project,Project,lastActivityAt,Time,singular,,,,,,,,skip,scalar_or_enum_field
+project,Project,lfsEnabled,Boolean,singular,,,,,,,,skip,scalar_or_enum_field
+project,Project,maxAccessLevel,AccessLevel,singular,,3,,projects,project_max_access_level,get,4,map,
+project,Project,mergeCommitTemplate,String,singular,,,,,,,,skip,scalar_or_enum_field
+project,Project,mergeRequest,MergeRequest,singular,iid:String! (required),61,author{id username name}; project{id fullPath name}; milestone{id title},merge_requests,project_merge_request,get,70,map,
+project,Project,mergeRequestTitleRegex,String,singular,,,,,,,,skip,scalar_or_enum_field
+project,Project,mergeRequestTitleRegexDescription,String,singular,,,,,,,,skip,scalar_or_enum_field
+project,Project,mergeRequestViolations,ComplianceViolation,connection,sort:ComplianceViolationSort; filters:ComplianceViolationProjectInput; after:String; before:String; first:Int; last:Int,3,,merge_requests,project_merge_request_violations,list,6,map,
+project,Project,mergeRequests,MergeRequest,connection,search:String; in:[IssuableSearchableField!]; approvedBy:[String!]; releaseTag:String; iids:[String!]; mergedBy:String; myReactionEmoji:String; or:UnionedMergeRequestFilterInput; sourceBranches:[String!]; targetBranches:[String!]; state:MergeRequestState; draft:Boolean; closedAfter:Time; closedBefore:Time; createdAfter:Time; createdBefore:Time; deployedAfter:Time; deployedBefore:Time; deploymentId:String; environmentName:String; updatedAfter:Time; updatedBefore:Time; labelName:[String]; mergedAfter:Time; mergedBefore:Time; milestoneTitle:String; milestoneWildcardId:MilestoneWildcardId; sort:MergeRequestSort; subscribed:SubscriptionStatus; not:MergeRequestsResolverNegatedParams; approver:[String!]; assigneeUsername:String; assigneeUsernames:[String!]; assigneeWildcardId:AssigneeWildcardId; authorUsername:String; reviewerUsername:String; reviewerWildcardId:ReviewerWildcardId; after:String; before:String; first:Int; last:Int,61,author{id username name}; project{id fullPath name}; milestone{id title},merge_requests,project_merge_requests,list,72,map,
+project,Project,mergeRequestsAccessLevel,ProjectFeatureAccess,singular,,2,,merge_requests,project_merge_requests_access_level,get,3,map,
+project,Project,mergeRequestsDisableCommittersApproval,Boolean,singular,,,,,,,,skip,scalar_or_enum_field
+project,Project,mergeRequestsEnabled,Boolean,singular,,,,,,,,skip,scalar_or_enum_field
+project,Project,mergeRequestsFfOnlyEnabled,Boolean,singular,,,,,,,,skip,scalar_or_enum_field
+project,Project,milestones,Milestone,connection,timeframe:Timeframe; ids:[ID!]; state:MilestoneStateEnum; title:String; searchTitle:String; containingDate:Time; sort:MilestoneSort; includeAncestors:Boolean; after:String; before:String; first:Int; last:Int,15,group{id fullPath name}; project{id fullPath name},projects,project_milestones,list,24,map,
+project,Project,mlExperiments,MlExperiment,connection,name:String; orderBy:MlModelsOrderBy; sort:SortDirectionEnum; after:String; before:String; first:Int; last:Int,7,,ml,project_ml_experiments,list,10,map,
+project,Project,name,String,singular,,,,,,,,skip,scalar_or_enum_field
+project,Project,nameWithNamespace,String,singular,,,,,,,,skip,scalar_or_enum_field
+project,Project,namespace,Namespace,singular,,21,,projects,project_namespace,get,22,map,
+project,Project,nestedEnvironments,NestedEnvironment,connection,name:String; search:String; states:[String!]; type:String; after:String; before:String; first:Int; last:Int,2,,projects,project_nested_environments,list,5,map,
+project,Project,onlyAllowMergeIfAllDiscussionsAreResolved,Boolean,singular,,,,,,,,skip,scalar_or_enum_field
+project,Project,onlyAllowMergeIfAllStatusChecksPassed,Boolean,singular,,,,,,,,skip,scalar_or_enum_field
+project,Project,onlyAllowMergeIfPipelineSucceeds,Boolean,singular,,,,,,,,skip,scalar_or_enum_field
+project,Project,openIssuesCount,Int,singular,,,,,,,,skip,scalar_or_enum_field
+project,Project,openMergeRequestsCount,Int,singular,,,,,,,,skip,scalar_or_enum_field
+project,Project,packages,Package,connection,sort:PackageSort; packageName:String; packageType:PackageTypeEnum; packageVersion:String; status:PackageStatus; includeVersionless:Boolean; after:String; before:String; first:Int; last:Int,9,project{id fullPath name},packages,project_packages,list,15,map,
+project,Project,packagesCleanupPolicy,PackagesCleanupPolicy,singular,,2,,packages,project_packages_cleanup_policy,get,3,map,
+project,Project,pagesDeployments,PagesDeployment,connection,active:Boolean; sort:Sort; versioned:Boolean; after:String; before:String; first:Int; last:Int,12,project{id fullPath name},projects,project_pages_deployments,list,18,map,
+project,Project,pagesForceHttps,Boolean,singular,,,,,,,,skip,scalar_or_enum_field
+project,Project,pagesUseUniqueDomain,Boolean,singular,,,,,,,,skip,scalar_or_enum_field
+project,Project,path,String,singular,,,,,,,,skip,scalar_or_enum_field
+project,Project,pathLocks,PathLock,connection,after:String; before:String; first:Int; last:Int,2,user{id username name},projects,project_path_locks,list,8,map,
+project,Project,pendingMemberApprovals,MemberApproval,connection,after:String; before:String; first:Int; last:Int,4,user{id username name},projects,project_pending_member_approvals,list,10,map,
+project,Project,pipeline,Pipeline,singular,id:CiPipelineID; iid:ID; sha:String,43,user{id username name}; project{id fullPath name},ci,project_pipeline,get,50,map,
+project,Project,pipelineAnalytics,PipelineAnalytics,singular,source:CiPipelineSources; ref:String; fromTime:Time; toTime:Time,11,,ci,project_pipeline_analytics,get,12,map,
+project,Project,pipelineCounts,PipelineCounts,singular,ref:String; sha:String; source:String,4,,ci,project_pipeline_counts,get,5,map,
+project,Project,pipelineExecutionPolicies,PipelineExecutionPolicy,connection,relationship:SecurityPolicyRelationType; includeUnscoped:Boolean; deduplicatePolicies:Boolean; after:String; before:String; first:Int; last:Int,8,,ci,project_pipeline_execution_policies,list,11,map,
+project,Project,pipelineExecutionSchedulePolicies,PipelineExecutionSchedulePolicy,connection,relationship:SecurityPolicyRelationType; includeUnscoped:Boolean; deduplicatePolicies:Boolean; after:String; before:String; first:Int; last:Int,8,,ci,project_pipeline_execution_schedule_policies,list,11,map,
+project,Project,pipelineScheduleStatusCounts,PipelineScheduleStatusCount,singular,,3,,ci,project_pipeline_schedule_status_counts,get,4,map,
+project,Project,pipelineSchedules,PipelineSchedule,connection,status:PipelineScheduleStatus; ids:[ID!]; sort:PipelineScheduleSort; after:String; before:String; first:Int; last:Int,14,project{id fullPath name},ci,project_pipeline_schedules,list,20,map,
+project,Project,pipelines,Pipeline,connection,status:PipelineStatusEnum; scope:PipelineScopeEnum; ref:String; refType:RefType; sha:String; source:String; ids:[ID!]; updatedAfter:Time; updatedBefore:Time; username:String; after:String; before:String; first:Int; last:Int,43,user{id username name}; project{id fullPath name},ci,project_pipelines,list,52,map,
+project,Project,preReceiveSecretDetectionEnabled,Boolean,singular,,,,,,,,skip,scalar_or_enum_field
+project,Project,preventMergeWithoutJiraIssueEnabled,Boolean,singular,,,,,,,,skip,scalar_or_enum_field
+project,Project,printingMergeRequestLinkEnabled,Boolean,singular,,,,,,,,skip,scalar_or_enum_field
+project,Project,projectMembers,MemberInterface,connection,search:String; sort:MemberSort; relations:[ProjectMemberRelation!]; accessLevels:[AccessLevelEnum!]; ids:[ID!]; after:String; before:String; first:Int; last:Int,,,,,,,skip,interface_typed_nodes
+project,Project,publicJobs,Boolean,singular,,,,,,,,skip,scalar_or_enum_field
+project,Project,pushRules,PushRules,singular,,13,,projects,project_push_rules,get,14,map,
+project,Project,recentIssueBoards,Board,connection,after:String; before:String; first:Int; last:Int,9,milestone{id title},boards,project_recent_issue_boards,list,14,map,
+project,Project,release,Release,singular,tagName:String! (required),9,author{id username name},projects,project_release,get,13,map,
+project,Project,releases,Release,connection,sort:ReleaseSort; after:String; before:String; first:Int; last:Int,9,author{id username name},projects,project_releases,list,15,map,
+project,Project,removeSourceBranchAfterMerge,Boolean,singular,,,,,,,,skip,scalar_or_enum_field
+project,Project,repository,Repository,singular,,8,,projects,project_repository,get,9,map,
+project,Project,repositorySizeExcess,Float,singular,,,,,,,,skip,scalar_or_enum_field
+project,Project,requestAccessEnabled,Boolean,singular,,,,,,,,skip,scalar_or_enum_field
+project,Project,requirement,Requirement,singular,sort:Sort; state:RequirementState; search:String; authorUsername:[String!]; workItemIid:ID; workItemIids:[ID!]; lastTestReportState:RequirementStatusFilter,9,author{id username name}; project{id fullPath name},projects,project_requirement,get,16,map,
+project,Project,requirementStatesCount,RequirementStatesCount,singular,,2,,projects,project_requirement_states_count,get,3,map,
+project,Project,requirements,Requirement,connection,sort:Sort; state:RequirementState; search:String; authorUsername:[String!]; workItemIid:ID; workItemIids:[ID!]; lastTestReportState:RequirementStatusFilter; after:String; before:String; first:Int; last:Int,9,author{id username name}; project{id fullPath name},projects,project_requirements,list,18,map,
+project,Project,rootGroup,Group,singular,,52,,projects,project_root_group,get,53,map,
+project,Project,runners,CiRunner,connection,paused:Boolean; status:CiRunnerStatus; type:CiRunnerType; tagList:[String!]; search:String; sort:CiRunnerSort; upgradeStatus:CiRunnerUpgradeStatus; creatorId:UserID; creatorUsername:String; versionPrefix:String; after:String; before:String; first:Int; last:Int,23,,ci,project_runners,list,26,map,
+project,Project,sastCiConfiguration,SastCiConfiguration,singular,,,,,,,,skip,no_scalar_fields_on_node
+project,Project,savedReplies,ProjectSavedReply,connection,after:String; before:String; first:Int; last:Int,3,,projects,project_saved_replies,list,6,map,
+project,Project,savedReply,ProjectSavedReply,singular,id:ProjectsSavedReplyID! (required),3,,projects,project_saved_reply,get,4,map,
+project,Project,scanExecutionPolicies,ScanExecutionPolicy,connection,actionScanTypes:[SecurityReportTypeEnum!]; relationship:SecurityPolicyRelationType; includeUnscoped:Boolean; deduplicatePolicies:Boolean; after:String; before:String; first:Int; last:Int,6,,security,project_scan_execution_policies,list,9,map,
+project,Project,secretPushProtectionEnabled,Boolean,singular,,,,,,,,skip,scalar_or_enum_field
+project,Project,securityConfigurationPath,String,singular,,,,,,,,skip,scalar_or_enum_field
+project,Project,securityDashboardPath,String,singular,,,,,,,,skip,scalar_or_enum_field
+project,Project,securityPolicyProject,Project,singular,,68,namespace{id fullPath name}; group{id fullPath name},security,project_security_policy_project,get,75,map,
+project,Project,securityPolicyProjectLinkedGroups,Group,connection,ids:[ID!]; topLevelOnly:Boolean; search:String; after:String; before:String; first:Int; last:Int,52,,security,project_security_policy_project_linked_groups,list,55,map,
+project,Project,securityPolicyProjectLinkedProjects,Project,connection,after:String; before:String; first:Int; last:Int,68,namespace{id fullPath name}; group{id fullPath name},security,project_security_policy_project_linked_projects,list,77,map,
+project,Project,securityPolicyProjectSuggestions,Project,connection,search:String! (required); onlyLinked:Boolean; after:String; before:String; first:Int; last:Int,68,namespace{id fullPath name}; group{id fullPath name},security,project_security_policy_project_suggestions,list,77,map,
+project,Project,securityScanners,SecurityScanners,singular,,3,,security,project_security_scanners,get,4,map,
+project,Project,securityTrainingProviders,ProjectSecurityTraining,singular,onlyEnabled:Boolean,,,,,,,skip,non_relay_list
+project,Project,securityTrainingUrls,SecurityTrainingUrl,singular,identifierExternalIds:[String!]! (required); filename:String,,,,,,,skip,non_relay_list
+project,Project,sentryDetailedError,SentryDetailedError,singular,id:GitlabErrorTrackingDetailedErrorID! (required),27,,projects,project_sentry_detailed_error,get,28,map,
+project,Project,sentryErrors,SentryErrorCollection,singular,,1,,projects,project_sentry_errors,get,2,map,
+project,Project,serviceDeskAddress,String,singular,,,,,,,,skip,scalar_or_enum_field
+project,Project,serviceDeskEnabled,Boolean,singular,,,,,,,,skip,scalar_or_enum_field
+project,Project,services,Service,connection,active:Boolean; type:ServiceType; after:String; before:String; first:Int; last:Int,,,,,,,skip,interface_typed_nodes
+project,Project,sharedRunnersEnabled,Boolean,singular,,,,,,,,skip,scalar_or_enum_field
+project,Project,snippets,Snippet,connection,ids:[SnippetID!]; visibility:VisibilityScopesEnum; after:String; before:String; first:Int; last:Int,14,author{id username name}; project{id fullPath name},snippets,project_snippets,list,23,map,
+project,Project,snippetsEnabled,Boolean,singular,,,,,,,,skip,scalar_or_enum_field
+project,Project,squashCommitTemplate,String,singular,,,,,,,,skip,scalar_or_enum_field
+project,Project,squashReadOnly,Boolean,singular,,,,,,,,skip,scalar_or_enum_field
+project,Project,sshUrlToRepo,String,singular,,,,,,,,skip,scalar_or_enum_field
+project,Project,starCount,Int,singular,,,,,,,,skip,scalar_or_enum_field
+project,Project,statistics,ProjectStatistics,singular,,11,,projects,project_statistics,get,12,map,
+project,Project,statisticsDetailsPaths,ProjectStatisticsRedirect,singular,,6,,projects,project_statistics_details_paths,get,7,map,
+project,Project,suggestionCommitMessage,String,singular,,,,,,,,skip,scalar_or_enum_field
+project,Project,targetBranchRules,ProjectTargetBranchRule,connection,after:String; before:String; first:Int; last:Int,4,,projects,project_target_branch_rules,list,7,map,
+project,Project,terraformState,TerraformState,singular,name:String! (required),6,,projects,project_terraform_state,get,7,map,
+project,Project,terraformStates,TerraformState,connection,after:String; before:String; first:Int; last:Int,6,,projects,project_terraform_states,list,9,map,
+project,Project,timelogs,Timelog,connection,startDate:Time; endDate:Time; startTime:Time; endTime:Time; projectId:ProjectID; groupId:GroupID; username:String; sort:TimelogSort; after:String; before:String; first:Int; last:Int,4,user{id username name}; project{id fullPath name},projects,project_timelogs,list,13,map,
+project,Project,topics,String,singular,,,,,,,,skip,scalar_or_enum_field
+project,Project,updatedAt,Time,singular,,,,,,,,skip,scalar_or_enum_field
+project,Project,userAccessAuthorizedAgents,ClusterAgentAuthorizationUserAccess,connection,after:String; before:String; first:Int; last:Int,1,,users,project_user_access_authorized_agents,list,4,map,
+project,Project,userPermissions,ProjectPermissions,singular,,58,,users,project_user_permissions,get,59,map,
+project,Project,valueStreamAnalytics,ValueStreamAnalytics,singular,,,,,,,,skip,no_scalar_fields_on_node
+project,Project,valueStreams,ValueStream,connection,id:ID; after:String; before:String; first:Int; last:Int,2,namespace{id fullPath name},analytics,project_value_streams,list,8,map,
+project,Project,visibility,String,singular,,,,,,,,skip,scalar_or_enum_field
+project,Project,vulnerabilities,Vulnerability,connection,projectId:[ID!]; reportType:[VulnerabilityReportType!]; severity:[VulnerabilitySeverity!]; state:[VulnerabilityState!]; owaspTopTen:[VulnerabilityOwaspTop10!]; identifierName:String; scanner:[String!]; scannerId:[VulnerabilitiesScannerID!]; sort:VulnerabilitySort; hasResolution:Boolean; hasAiResolution:Boolean; hasIssues:Boolean; hasMergeRequest:Boolean; image:[String!]; clusterId:[ClustersClusterID!]; clusterAgentId:[ClustersAgentID!]; dismissalReason:[VulnerabilityDismissalReason!]; hasRemediations:Boolean; after:String; before:String; first:Int; last:Int,27,project{id fullPath name},security,project_vulnerabilities,list,33,map,
+project,Project,vulnerabilitiesCountByDay,VulnerabilitiesCountByDay,connection,startDate:ISO8601Date! (required); endDate:ISO8601Date! (required); after:String; before:String; first:Int; last:Int,8,,security,project_vulnerabilities_count_by_day,list,11,map,
+project,Project,vulnerabilityIdentifierSearch,String,singular,name:String! (required),,,,,,,skip,scalar_or_enum_field
+project,Project,vulnerabilityImages,VulnerabilityContainerImage,connection,after:String; before:String; first:Int; last:Int,1,,security,project_vulnerability_images,list,4,map,
+project,Project,vulnerabilityScanners,VulnerabilityScanner,connection,after:String; before:String; first:Int; last:Int,6,,security,project_vulnerability_scanners,list,9,map,
+project,Project,vulnerabilitySeveritiesCount,VulnerabilitySeveritiesCount,singular,projectId:[ID!]; reportType:[VulnerabilityReportType!]; severity:[VulnerabilitySeverity!]; state:[VulnerabilityState!]; owaspTopTen:[VulnerabilityOwaspTop10!]; scanner:[String!]; scannerId:[VulnerabilitiesScannerID!]; hasIssues:Boolean; hasResolution:Boolean; hasAiResolution:Boolean; image:[String!]; clusterAgentId:[ClustersAgentID!]; hasMergeRequest:Boolean; dismissalReason:[VulnerabilityDismissalReason!]; hasRemediations:Boolean; capped:Boolean,6,,security,project_vulnerability_severities_count,get,7,map,
+project,Project,vulnerabilityStatistic,VulnerabilityStatisticType,singular,,9,,security,project_vulnerability_statistic,get,10,map,
+project,Project,webPath,String,singular,,,,,,,,skip,scalar_or_enum_field
+project,Project,webUrl,String,singular,,,,,,,,skip,scalar_or_enum_field
+project,Project,wikiEnabled,Boolean,singular,,,,,,,,skip,scalar_or_enum_field
+project,Project,workItemTypes,WorkItemType,connection,after:String; before:String; first:Int; last:Int,3,,work_items,project_work_item_types,list,6,map,
+group,Group,actualRepositorySizeLimit,Float,singular,,,,,,,,skip,scalar_or_enum_field
+group,Group,actualSizeLimit,Float,singular,,,,,,,,skip,scalar_or_enum_field
+group,Group,additionalPurchasedStorageSize,Float,singular,,,,,,,,skip,scalar_or_enum_field
+group,Group,adminEditPath,String,singular,,,,,,,,skip,scalar_or_enum_field
+group,Group,adminShowPath,String,singular,,,,,,,,skip,scalar_or_enum_field
+group,Group,allowStaleRunnerPruning,Boolean,singular,,,,,,,,skip,scalar_or_enum_field
+group,Group,analyzerStatuses,AnalyzerGroupStatusType,singular,,,,,,,,skip,non_relay_list
+group,Group,approvalPolicies,ApprovalPolicy,connection,relationship:SecurityPolicyRelationType; includeUnscoped:Boolean; deduplicatePolicies:Boolean; after:String; before:String; first:Int; last:Int,8,,security,group_approval_policies,list,11,map,
+group,Group,archived,Boolean,singular,,,,,,,,skip,scalar_or_enum_field
+group,Group,autoDevopsEnabled,Boolean,singular,,,,,,,,skip,scalar_or_enum_field
+group,Group,autocompleteUsers,AutocompletedUser,singular,search:String,,,,,,,skip,non_relay_list
+group,Group,avatarUrl,String,singular,,,,,,,,skip,scalar_or_enum_field
+group,Group,billableMembersCount,Int,singular,requestedHostedPlan:String,,,,,,,skip,scalar_or_enum_field
+group,Group,board,Board,singular,id:BoardID! (required),9,milestone{id title},boards,group_board,get,12,map,
+group,Group,boards,Board,connection,id:BoardID; after:String; before:String; first:Int; last:Int,9,milestone{id title},boards,group_boards,list,14,map,
+group,Group,ciQueueingHistory,QueueingDelayHistory,singular,fromTime:Time; toTime:Time,,,,,,,skip,no_scalar_fields_on_node
+group,Group,ciVariables,CiGroupVariable,connection,sort:CiVariableSort; after:String; before:String; first:Int; last:Int,10,,ci,group_ci_variables,list,13,map,
+group,Group,clusterAgents,ClusterAgent,connection,hasVulnerabilities:Boolean; hasWorkspacesAgentConfig:Boolean; hasRemoteDevelopmentEnabled:Boolean; after:String; before:String; first:Int; last:Int,6,project{id fullPath name},groups,group_cluster_agents,list,12,map,
+group,Group,codeCoverageActivities,CodeCoverageActivity,connection,startDate:Date! (required); after:String; before:String; first:Int; last:Int,4,,analytics,group_code_coverage_activities,list,7,map,
+group,Group,complianceFrameworks,ComplianceFramework,connection,id:ComplianceManagementFrameworkID; search:String; sort:ComplianceFrameworkSort; ids:[ComplianceManagementFrameworkID!]; after:String; before:String; first:Int; last:Int,8,,security,group_compliance_frameworks,list,11,map,
+group,Group,contactStateCounts,ContactStateCounts,singular,search:String; state:CustomerRelationsContactState,3,,groups,group_contact_state_counts,get,4,map,
+group,Group,contacts,CustomerRelationsContact,connection,sort:ContactSort; search:String; state:CustomerRelationsContactState; ids:[CustomerRelationsContactID!]; after:String; before:String; first:Int; last:Int,9,,groups,group_contacts,list,12,map,
+group,Group,containerRepositories,ContainerRepository,connection,name:String; sort:ContainerRepositorySort; after:String; before:String; first:Int; last:Int,12,project{id fullPath name},packages,group_container_repositories,list,18,map,
+group,Group,containerRepositoriesCount,Int,singular,,,,,,,,skip,scalar_or_enum_field
+group,Group,containsLockedProjects,Boolean,singular,,,,,,,,skip,scalar_or_enum_field
+group,Group,contributions,ContributionAnalyticsContribution,connection,from:ISO8601Date! (required); to:ISO8601Date! (required); after:String; first:Int,8,user{id username name},analytics,group_contributions,list,14,map,
+group,Group,createdAt,Time,singular,,,,,,,,skip,scalar_or_enum_field
+group,Group,crossProjectPipelineAvailable,Boolean,singular,,,,,,,,skip,scalar_or_enum_field
+group,Group,customAttributes,CustomAttribute,singular,,,,,,,,skip,non_relay_list
+group,Group,customEmoji,CustomEmoji,connection,includeAncestorGroups:Boolean; after:String; before:String; first:Int; last:Int,5,,groups,group_custom_emoji,list,8,map,
+group,Group,customizableDashboardVisualizations,CustomizableDashboardVisualization,connection,slug:String; after:String; before:String; first:Int; last:Int,5,,analytics,group_customizable_dashboard_visualizations,list,8,map,
+group,Group,customizableDashboards,CustomizableDashboard,connection,slug:String; category:CustomizableDashboardCategory; after:String; before:String; first:Int; last:Int,7,,analytics,group_customizable_dashboards,list,10,map,
+group,Group,dataTransfer,GroupDataTransfer,singular,from:Date; to:Date,,,,,,,skip,no_scalar_fields_on_node
+group,Group,dependencies,Dependency,connection,sort:DependencySort; packageManagers:[PackageManager!]; componentNames:[String!]; componentIds:[SbomComponentID!]; sourceTypes:[SbomSourceType!]; componentVersions:[String!]; after:String; before:String; first:Int; last:Int,5,,security,group_dependencies,list,8,map,
+group,Group,dependencyProxyBlobCount,Int,singular,,,,,,,,skip,scalar_or_enum_field
+group,Group,dependencyProxyBlobs,DependencyProxyBlob,connection,after:String; before:String; first:Int; last:Int,4,,packages,group_dependency_proxy_blobs,list,7,map,
+group,Group,dependencyProxyImageCount,Int,singular,,,,,,,,skip,scalar_or_enum_field
+group,Group,dependencyProxyImagePrefix,String,singular,,,,,,,,skip,scalar_or_enum_field
+group,Group,dependencyProxyImageTtlPolicy,DependencyProxyImageTtlGroupPolicy,singular,,4,,packages,group_dependency_proxy_image_ttl_policy,get,5,map,
+group,Group,dependencyProxyManifests,DependencyProxyManifest,connection,after:String; before:String; first:Int; last:Int,8,,packages,group_dependency_proxy_manifests,list,11,map,
+group,Group,dependencyProxySetting,DependencyProxySetting,singular,,2,,packages,group_dependency_proxy_setting,get,3,map,
+group,Group,dependencyProxyTotalSize,String,singular,,,,,,,,skip,scalar_or_enum_field
+group,Group,dependencyProxyTotalSizeBytes,BigInt,singular,,,,,,,,skip,scalar_or_enum_field
+group,Group,descendantGroups,Group,connection,includeParentDescendants:Boolean; owned:Boolean; search:String; ids:[ID!]; archived:Boolean; sort:GroupSort; after:String; before:String; first:Int; last:Int,52,,groups,group_descendant_groups,list,55,map,
+group,Group,descendantGroupsCount,Int,singular,,,,,,,,skip,scalar_or_enum_field
+group,Group,description,String,singular,,,,,,,,skip,scalar_or_enum_field
+group,Group,descriptionHtml,String,singular,,,,,,,,skip,scalar_or_enum_field
+group,Group,dora,GroupDora,singular,,,,,,,,skip,no_scalar_fields_on_node
+group,Group,doraPerformanceScoreCounts,DoraPerformanceScoreCount,connection,projectFilters:DoraProjectFilterInput; after:String; before:String; first:Int; last:Int,5,,analytics,group_dora_performance_score_counts,list,8,map,
+group,Group,editPath,String,singular,,,,,,,,skip,scalar_or_enum_field
+group,Group,emailsDisabled,Boolean,singular,,,,,,,,skip,scalar_or_enum_field
+group,Group,emailsEnabled,Boolean,singular,,,,,,,,skip,scalar_or_enum_field
+group,Group,enforceFreeUserCap,Boolean,singular,,,,,,,,skip,scalar_or_enum_field
+group,Group,environmentScopes,CiGroupEnvironmentScope,connection,name:String; search:String; after:String; before:String; first:Int; last:Int,1,,groups,group_environment_scopes,list,4,map,
+group,Group,fullName,String,singular,,,,,,,,skip,scalar_or_enum_field
+group,Group,fullPath,ID,singular,,,,,,,,skip,scalar_or_enum_field
+group,Group,gitlabSubscriptionsPreviewBillableUserChange,PreviewBillableUserChange,singular,addGroupId:Int; addUserEmails:[String!]; addUserIds:[Int!]; memberRoleId:Int; role:GitlabSubscriptionsUserRole! (required),3,,admin,group_gitlab_subscriptions_preview_billable_user_change,get,4,map,
+group,Group,groupMembers,GroupMember,connection,search:String; sort:MemberSort; relations:[GroupMemberRelation!]; accessLevels:[AccessLevelEnum!]; enterprise:Boolean; ids:[ID!]; after:String; before:String; first:Int; last:Int,5,user{id username name}; group{id fullPath name}; accessLevel{integerValue stringValue},groups,group_group_members,list,16,map,
+group,Group,groupMembersCount,Int,singular,,,,,,,,skip,scalar_or_enum_field
+group,Group,id,ID,singular,,,,,,,,skip,scalar_or_enum_field
+group,Group,isLinkedToSubscription,Boolean,singular,,,,,,,,skip,scalar_or_enum_field
+group,Group,isSelfArchived,Boolean,singular,,,,,,,,skip,scalar_or_enum_field
+group,Group,issues,Issue,connection,search:String; in:[IssuableSearchableField!]; assigneeId:String; assigneeUsernames:[String!]; assigneeWildcardId:AssigneeWildcardId; authorUsername:String; closedAfter:Time; closedBefore:Time; confidential:Boolean; createdAfter:Time; createdBefore:Time; crmContactId:String; crmOrganizationId:String; dueAfter:Time; dueBefore:Time; iid:String; iids:[String!]; labelName:[String]; milestoneTitle:[String]; milestoneWildcardId:MilestoneWildcardId; myReactionEmoji:String; not:NegatedIssueFilterInput; or:UnionedIssueFilterInput; subscribed:SubscriptionStatus; types:[IssueType!]; updatedAfter:Time; updatedBefore:Time; workItemTypeIds:[WorkItemsTypeID!]; epicId:String; epicWildcardId:EpicWildcardId; includeSubepics:Boolean; iterationId:[ID]; iterationTitle:String; iterationWildcardId:IterationWildcardId; iterationCadenceId:[IterationsCadenceID!]; weight:String; weightWildcardId:WeightWildcardId; healthStatusFilter:HealthStatusFilter; sort:IssueSort; state:IssuableState; includeSubgroups:Boolean; includeArchived:Boolean; after:String; before:String; first:Int; last:Int,43,author{id username name}; milestone{id title},issues,group_issues,list,51,map,
+group,Group,iterationCadences,IterationCadence,connection,id:IterationsCadenceID; title:String; durationInWeeks:Int; automatic:Boolean; active:Boolean; includeAncestorGroups:Boolean; after:String; before:String; first:Int; last:Int,9,,groups,group_iteration_cadences,list,12,map,
+group,Group,iterations,Iteration,connection,timeframe:Timeframe; state:IterationState; search:String; in:[IterationSearchableField!]; id:ID; iid:ID; includeAncestors:Boolean; includeDescendants:Boolean; iterationCadenceIds:[IterationsCadenceID!]; sort:IterationSort; after:String; before:String; first:Int; last:Int,14,group{id fullPath name},groups,group_iterations,list,20,map,
+group,Group,label,Label,singular,title:String! (required),9,,groups,group_label,get,10,map,
+group,Group,labels,Label,connection,title:String; searchTerm:String; searchIn:[LabelSearchFieldList!]!; includeAncestorGroups:Boolean; archived:Boolean; includeDescendantGroups:Boolean; onlyGroupLabels:Boolean; after:String; before:String; first:Int; last:Int,9,,groups,group_labels,list,12,map,
+group,Group,lfsEnabled,Boolean,singular,,,,,,,,skip,scalar_or_enum_field
+group,Group,lockMathRenderingLimitsEnabled,Boolean,singular,,,,,,,,skip,scalar_or_enum_field
+group,Group,mathRenderingLimitsEnabled,Boolean,singular,,,,,,,,skip,scalar_or_enum_field
+group,Group,maxAccessLevel,AccessLevel,singular,,3,,groups,group_max_access_level,get,4,map,
+group,Group,mentionsDisabled,Boolean,singular,,,,,,,,skip,scalar_or_enum_field
+group,Group,mergeRequestViolations,ComplianceViolation,connection,sort:ComplianceViolationSort; filters:ComplianceViolationInput; after:String; before:String; first:Int; last:Int,3,,merge_requests,group_merge_request_violations,list,6,map,
+group,Group,mergeRequests,MergeRequest,connection,search:String; in:[IssuableSearchableField!]; approvedBy:[String!]; releaseTag:String; iids:[String!]; mergedBy:String; myReactionEmoji:String; or:UnionedMergeRequestFilterInput; sourceBranches:[String!]; targetBranches:[String!]; state:MergeRequestState; draft:Boolean; closedAfter:Time; closedBefore:Time; createdAfter:Time; createdBefore:Time; deployedAfter:Time; deployedBefore:Time; deploymentId:String; environmentName:String; updatedAfter:Time; updatedBefore:Time; labelName:[String]; mergedAfter:Time; mergedBefore:Time; milestoneTitle:String; milestoneWildcardId:MilestoneWildcardId; sort:MergeRequestSort; subscribed:SubscriptionStatus; not:MergeRequestsResolverNegatedParams; approver:[String!]; includeSubgroups:Boolean; includeArchived:Boolean; assigneeUsername:String; assigneeUsernames:[String!]; assigneeWildcardId:AssigneeWildcardId; reviewerUsername:String; reviewerWildcardId:ReviewerWildcardId; authorUsername:String; after:String; before:String; first:Int; last:Int,61,author{id username name}; project{id fullPath name}; milestone{id title},merge_requests,group_merge_requests,list,72,map,
+group,Group,milestones,Milestone,connection,timeframe:Timeframe; ids:[ID!]; state:MilestoneStateEnum; title:String; searchTitle:String; containingDate:Time; sort:MilestoneSort; includeAncestors:Boolean; includeDescendants:Boolean; after:String; before:String; first:Int; last:Int,15,group{id fullPath name}; project{id fullPath name},groups,group_milestones,list,24,map,
+group,Group,name,String,singular,,,,,,,,skip,scalar_or_enum_field
+group,Group,namespaceSettings,NamespaceSettings,singular,,1,,groups,group_namespace_settings,get,2,map,
+group,Group,organizationStateCounts,OrganizationStateCounts,singular,search:String; state:CustomerRelationsOrganizationState,3,,groups,group_organization_state_counts,get,4,map,
+group,Group,organizations,CustomerRelationsOrganization,connection,sort:OrganizationSort; search:String; state:CustomerRelationsOrganizationState; ids:[CustomerRelationsOrganizationID!]; after:String; before:String; first:Int; last:Int,7,,groups,group_organizations,list,10,map,
+group,Group,packageSettings,PackageSettings,singular,,19,,packages,group_package_settings,get,20,map,
+group,Group,packages,Package,connection,sort:PackageGroupSort; packageName:String; packageType:PackageTypeEnum; packageVersion:String; status:PackageStatus; includeVersionless:Boolean; after:String; before:String; first:Int; last:Int,9,project{id fullPath name},packages,group_packages,list,15,map,
+group,Group,pagesDeployments,PagesDeployment,connection,active:Boolean; sort:Sort; versioned:Boolean; after:String; before:String; first:Int; last:Int,12,project{id fullPath name},groups,group_pages_deployments,list,18,map,
+group,Group,parent,Group,singular,,52,,groups,group_parent,get,53,map,
+group,Group,path,String,singular,,,,,,,,skip,scalar_or_enum_field
+group,Group,pendingMemberApprovals,MemberApproval,connection,after:String; before:String; first:Int; last:Int,4,user{id username name},groups,group_pending_member_approvals,list,10,map,
+group,Group,pipelineAnalytics,PipelineAnalytics,singular,source:CiPipelineSources; ref:String; fromTime:Time; toTime:Time,11,,ci,group_pipeline_analytics,get,12,map,
+group,Group,pipelineExecutionPolicies,PipelineExecutionPolicy,connection,relationship:SecurityPolicyRelationType; includeUnscoped:Boolean; deduplicatePolicies:Boolean; after:String; before:String; first:Int; last:Int,8,,ci,group_pipeline_execution_policies,list,11,map,
+group,Group,pipelineExecutionSchedulePolicies,PipelineExecutionSchedulePolicy,connection,relationship:SecurityPolicyRelationType; includeUnscoped:Boolean; deduplicatePolicies:Boolean; after:String; before:String; first:Int; last:Int,8,,ci,group_pipeline_execution_schedule_policies,list,11,map,
+group,Group,projectComplianceStandardsAdherence,ComplianceStandardsAdherence,connection,filters:ComplianceStandardsAdherenceInput; after:String; before:String; first:Int; last:Int,5,project{id fullPath name},security,group_project_compliance_standards_adherence,list,11,map,
+group,Group,projectCreationLevel,String,singular,,,,,,,,skip,scalar_or_enum_field
+group,Group,projects,Project,connection,includeSubgroups:Boolean; includeArchived:Boolean; notAimedForDeletion:Boolean; search:String; sort:NamespaceProjectSort; ids:[ID!]; withIssuesEnabled:Boolean; withMergeRequestsEnabled:Boolean; withNamespaceDomainPages:Boolean; archivedOnly:Boolean; complianceFrameworkFilters:ComplianceFrameworkFilters; hasCodeCoverage:Boolean; hasVulnerabilities:Boolean; sbomComponentId:ID; after:String; before:String; first:Int; last:Int,68,namespace{id fullPath name}; group{id fullPath name},groups,group_projects,list,77,map,
+group,Group,projectsCount,Int,singular,,,,,,,,skip,scalar_or_enum_field
+group,Group,recentIssueBoards,Board,connection,after:String; before:String; first:Int; last:Int,9,milestone{id title},boards,group_recent_issue_boards,list,14,map,
+group,Group,releases,Release,connection,sort:GroupReleaseSort; after:String; before:String; first:Int; last:Int,9,author{id username name},groups,group_releases,list,15,map,
+group,Group,repositorySizeExcessProjectCount,Int,singular,,,,,,,,skip,scalar_or_enum_field
+group,Group,requestAccessEnabled,Boolean,singular,,,,,,,,skip,scalar_or_enum_field
+group,Group,requireTwoFactorAuthentication,Boolean,singular,,,,,,,,skip,scalar_or_enum_field
+group,Group,rootNamespace,Namespace,singular,,21,,groups,group_root_namespace,get,22,map,
+group,Group,rootStorageStatistics,RootStorageStatistics,singular,,12,,groups,group_root_storage_statistics,get,13,map,
+group,Group,runners,CiRunner,connection,paused:Boolean; status:CiRunnerStatus; type:CiRunnerType; tagList:[String!]; search:String; sort:CiRunnerSort; upgradeStatus:CiRunnerUpgradeStatus; creatorId:UserID; creatorUsername:String; versionPrefix:String; membership:CiRunnerMembershipFilter; after:String; before:String; first:Int; last:Int,23,,ci,group_runners,list,26,map,
+group,Group,savedReplies,GroupSavedReply,connection,includeAncestorGroups:Boolean; after:String; before:String; first:Int; last:Int,3,,groups,group_saved_replies,list,6,map,
+group,Group,savedReply,GroupSavedReply,singular,id:GroupsSavedReplyID! (required),3,,groups,group_saved_reply,get,4,map,
+group,Group,scanExecutionPolicies,ScanExecutionPolicy,connection,actionScanTypes:[SecurityReportTypeEnum!]; relationship:SecurityPolicyRelationType; includeUnscoped:Boolean; deduplicatePolicies:Boolean; after:String; before:String; first:Int; last:Int,6,,security,group_scan_execution_policies,list,9,map,
+group,Group,securityCategories,SecurityCategory,singular,,,,,,,,skip,non_relay_list
+group,Group,securityPolicyProject,Project,singular,,68,namespace{id fullPath name}; group{id fullPath name},security,group_security_policy_project,get,75,map,
+group,Group,securityPolicyProjectSuggestions,Project,connection,search:String! (required); onlyLinked:Boolean; after:String; before:String; first:Int; last:Int,68,namespace{id fullPath name}; group{id fullPath name},security,group_security_policy_project_suggestions,list,77,map,
+group,Group,shareWithGroupLock,Boolean,singular,,,,,,,,skip,scalar_or_enum_field
+group,Group,sharedGroups,Group,connection,search:String; sort:GroupSort; after:String; before:String; first:Int; last:Int,52,,groups,group_shared_groups,list,55,map,
+group,Group,sharedProjects,Project,connection,search:String; sort:String; minAccessLevel:AccessLevelEnum; programmingLanguageName:String; active:Boolean; after:String; before:String; first:Int; last:Int,68,namespace{id fullPath name}; group{id fullPath name},groups,group_shared_projects,list,77,map,
+group,Group,sharedRunnersSetting,SharedRunnersSetting,singular,,,,,,,,skip,scalar_or_enum_field
+group,Group,stats,GroupStats,singular,,,,,,,,skip,no_scalar_fields_on_node
+group,Group,storageSizeLimit,Float,singular,,,,,,,,skip,scalar_or_enum_field
+group,Group,subgroupCreationLevel,String,singular,,,,,,,,skip,scalar_or_enum_field
+group,Group,timelogs,Timelog,connection,startDate:Time; endDate:Time; startTime:Time; endTime:Time; projectId:ProjectID; groupId:GroupID; username:String; sort:TimelogSort; after:String; before:String; first:Int; last:Int,4,user{id username name}; project{id fullPath name},groups,group_timelogs,list,13,map,
+group,Group,totalRepositorySize,Float,singular,,,,,,,,skip,scalar_or_enum_field
+group,Group,totalRepositorySizeExcess,Float,singular,,,,,,,,skip,scalar_or_enum_field
+group,Group,twoFactorGracePeriod,Int,singular,,,,,,,,skip,scalar_or_enum_field
+group,Group,updatedAt,Time,singular,,,,,,,,skip,scalar_or_enum_field
+group,Group,userPermissions,GroupPermissions,singular,,15,,groups,group_user_permissions,get,16,map,
+group,Group,valueStreamAnalytics,ValueStreamAnalytics,singular,,,,,,,,skip,no_scalar_fields_on_node
+group,Group,valueStreams,ValueStream,connection,id:ID; after:String; before:String; first:Int; last:Int,2,namespace{id fullPath name},analytics,group_value_streams,list,8,map,
+group,Group,visibility,String,singular,,,,,,,,skip,scalar_or_enum_field
+group,Group,vulnerabilities,Vulnerability,connection,projectId:[ID!]; reportType:[VulnerabilityReportType!]; severity:[VulnerabilitySeverity!]; state:[VulnerabilityState!]; owaspTopTen:[VulnerabilityOwaspTop10!]; identifierName:String; scanner:[String!]; scannerId:[VulnerabilitiesScannerID!]; sort:VulnerabilitySort; hasResolution:Boolean; hasAiResolution:Boolean; hasIssues:Boolean; hasMergeRequest:Boolean; image:[String!]; clusterId:[ClustersClusterID!]; clusterAgentId:[ClustersAgentID!]; dismissalReason:[VulnerabilityDismissalReason!]; hasRemediations:Boolean; after:String; before:String; first:Int; last:Int,27,project{id fullPath name},security,group_vulnerabilities,list,33,map,
+group,Group,vulnerabilitiesCountByDay,VulnerabilitiesCountByDay,connection,startDate:ISO8601Date! (required); endDate:ISO8601Date! (required); after:String; before:String; first:Int; last:Int,8,,security,group_vulnerabilities_count_by_day,list,11,map,
+group,Group,vulnerabilityGrades,VulnerableProjectsByGrade,singular,includeSubgroups:Boolean; letterGrade:VulnerabilityGrade,,,,,,,skip,non_relay_list
+group,Group,vulnerabilityIdentifierSearch,String,singular,name:String! (required),,,,,,,skip,scalar_or_enum_field
+group,Group,vulnerabilityNamespaceStatistic,VulnerabilityNamespaceStatisticType,singular,,9,,security,group_vulnerability_namespace_statistic,get,10,map,
+group,Group,vulnerabilityScanners,VulnerabilityScanner,connection,after:String; before:String; first:Int; last:Int,6,,security,group_vulnerability_scanners,list,9,map,
+group,Group,vulnerabilitySeveritiesCount,VulnerabilitySeveritiesCount,singular,projectId:[ID!]; reportType:[VulnerabilityReportType!]; severity:[VulnerabilitySeverity!]; state:[VulnerabilityState!]; owaspTopTen:[VulnerabilityOwaspTop10!]; scanner:[String!]; scannerId:[VulnerabilitiesScannerID!]; hasIssues:Boolean; hasResolution:Boolean; hasAiResolution:Boolean; image:[String!]; clusterAgentId:[ClustersAgentID!]; hasMergeRequest:Boolean; dismissalReason:[VulnerabilityDismissalReason!]; hasRemediations:Boolean; capped:Boolean,6,,security,group_vulnerability_severities_count,get,7,map,
+group,Group,webPath,String,singular,,,,,,,,skip,scalar_or_enum_field
+group,Group,webUrl,String,singular,,,,,,,,skip,scalar_or_enum_field
+group,Group,workItem,WorkItem,singular,iid:String! (required),21,,work_items,group_work_item,get,22,map,
+group,Group,workItemStateCounts,WorkItemStateCountsType,singular,search:String; in:[IssuableSearchableField!]; ids:[WorkItemID!]; authorUsername:String; confidential:Boolean; assigneeUsernames:[String!]; assigneeWildcardId:AssigneeWildcardId; labelName:[String!]; milestoneTitle:[String!]; milestoneWildcardId:MilestoneWildcardId; myReactionEmoji:String; iids:[String!]; state:IssuableState; types:[IssueType!]; workItemTypeIds:[WorkItemsTypeID!]; createdBefore:Time; createdAfter:Time; updatedBefore:Time; updatedAfter:Time; dueBefore:Time; dueAfter:Time; closedBefore:Time; closedAfter:Time; subscribed:SubscriptionStatus; not:NegatedWorkItemFilterInput; or:UnionedWorkItemFilterInput; parentIds:[WorkItemID!]; releaseTag:[String!]; releaseTagWildcardId:ReleaseTagWildcardId; crmContactId:String; crmOrganizationId:String; iid:String; sort:WorkItemSort; verificationStatusWidget:VerificationStatusFilterInput; healthStatusFilter:HealthStatusFilter; weight:String; weightWildcardId:WeightWildcardId; iterationId:[ID]; iterationWildcardId:IterationWildcardId; iterationCadenceId:[IterationsCadenceID!]; includeAncestors:Boolean; includeDescendants:Boolean; timeframe:Timeframe,3,,work_items,group_work_item_state_counts,get,4,map,
+group,Group,workItemTypes,WorkItemType,connection,after:String; before:String; first:Int; last:Int,3,,work_items,group_work_item_types,list,6,map,
+group,Group,workItems,WorkItem,connection,search:String; in:[IssuableSearchableField!]; ids:[WorkItemID!]; authorUsername:String; confidential:Boolean; assigneeUsernames:[String!]; assigneeWildcardId:AssigneeWildcardId; labelName:[String!]; milestoneTitle:[String!]; milestoneWildcardId:MilestoneWildcardId; myReactionEmoji:String; iids:[String!]; state:IssuableState; types:[IssueType!]; workItemTypeIds:[WorkItemsTypeID!]; createdBefore:Time; createdAfter:Time; updatedBefore:Time; updatedAfter:Time; dueBefore:Time; dueAfter:Time; closedBefore:Time; closedAfter:Time; subscribed:SubscriptionStatus; not:NegatedWorkItemFilterInput; or:UnionedWorkItemFilterInput; parentIds:[WorkItemID!]; releaseTag:[String!]; releaseTagWildcardId:ReleaseTagWildcardId; crmContactId:String; crmOrganizationId:String; iid:String; sort:WorkItemSort; verificationStatusWidget:VerificationStatusFilterInput; healthStatusFilter:HealthStatusFilter; weight:String; weightWildcardId:WeightWildcardId; iterationId:[ID]; iterationWildcardId:IterationWildcardId; iterationCadenceId:[IterationsCadenceID!]; includeAncestors:Boolean; includeDescendants:Boolean; timeframe:Timeframe; after:String; before:String; first:Int; last:Int,21,,work_items,group_work_items,list,24,map,
