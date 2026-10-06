@@ -23,6 +23,7 @@ A read-only SQL layer over the GitLab control plane, built on the GitLab GraphQL
 
 total services: __18__  
 total resources: __244__  
+source project: __[stackql-provider-gitlab](https://github.com/stackql-registry/stackql-provider-gitlab)__  
 
 :::
 
